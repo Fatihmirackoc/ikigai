@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>İkigai · Yaşam Amacın</title>
+    <style>
+        :root {
+            --sakura: #f2a7b5; --mint: #a8d8c8; --lavender: #c3b1e1; --peach: #fccb8f;
+            --bg: #faf7f2; --card-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.6);
+            --text: #4a4543; --text-light: #7a726e;
+            --shadow-sm: 0 2px 12px rgba(0,0,0,0.04); --shadow-md: 0 8px 32px rgba(0,0,0,0.06);
+            --radius-xl: 28px; --radius-lg: 20px; --radius-md: 14px;
+            --font-main: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+            --font-jp: 'Noto Serif JP', 'Georgia', 'Times New Roman', serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(145deg, #fdf6f0 0%, #f5ede4 25%, #eef5f4 55%, #f8f4f9 80%, #fdf6f0 100%);
+            background-attachment: fixed; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px; padding-bottom: 90px; color: var(--text);
+            -webkit-font-smoothing: antialiased; user-select: none;
+        }
+        .app-container { width:100%; max-width:430px; display:flex; flex-direction:column; gap:18px; position:relative; }
+        .glass-card {
+            background: var(--card-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 24px 20px; box-shadow: var(--shadow-md); transition: all 0.3s ease;
+        }
+        .app-header { text-align:center; padding:20px 10px 8px; }
+        .app-header h1 { font-family:var(--font-jp); font-size:2.8rem; font-weight:400; letter-spacing:1px; color:#c96b7a; line-height:1; margin-bottom:2px; }
+        .app-header .subtitle { font-size:0.85rem; color:var(--text-light); letter-spacing:1.5px; text-transform:uppercase; font-weight:500; }
+        .tab-content { display:none; flex-direction:column; gap:16px; animation:fadeSlide 0.4s ease; }
+        .tab-content.active { display:flex; }
+        @keyframes fadeSlide { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .category-card {
+            background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5); border-radius: var(--radius-lg);
+            padding: 16px; box-shadow: var(--shadow-sm); margin-bottom:12px;
+        }
+        .category-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight:600; font-size:0.9rem; color:var(--text); }
+        .category-dot {
+            width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-size:0.85rem; color:#fff; flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,0.08);
+        }
+        .dot-love { background:var(--sakura); } .dot-good { background:var(--mint); }
+        .dot-world { background:var(--lavender); } .dot-money { background:var(--peach); }
+        .category-textarea {
+            width:100%; border:2px solid #e8e4df; border-radius: var(--radius-md); padding:12px 14px;
+            font-family:var(--font-main); font-size:0.9rem; resize:none; transition:all 0.3s;
+            background:#fdfdfb; color:#2d3436; line-height:1.5; min-height:70px;
+            -webkit-appearance:none;
+        }
+        .category-textarea:focus { outline:none; border-color:#c96b7a; box-shadow:0 0 0 4px rgba(201,107,122,0.06); background:#fff; }
+        .category-textarea::placeholder { color:#c4bdb8; font-style:italic; font-size:0.78rem; }
+        .tag-hint { font-size:0.7rem; color:#b8afaa; margin-top:4px; }
+        .btn-generate {
+            width:100%; padding:16px 20px; background:linear-gradient(135deg, #d4978b 0%, #c17d74 100%);
+            color:#fff; border:none; border-radius:var(--radius-md); font-size:1rem; font-weight:600;
+            cursor:pointer; letter-spacing:0.8px; transition:all 0.3s;
+            box-shadow:0 8px 28px rgba(193,125,116,0.3); font-family:var(--font-main); margin-top:12px;
+            position:relative; overflow:hidden; -webkit-appearance:none;
+        }
+        .btn-generate:active { transform:scale(0.96); }
+        .warning-msg { text-align:center; color:#d4837a; font-size:0.8rem; font-weight:500; min-height:18px; margin-top:8px; }
+        .diagram-wrapper { width:100%; aspect-ratio:1/1; position:relative; transition:all 0.6s cubic-bezier(0.25,0.8,0.25,1.2); opacity:0; transform:scale(0.9); pointer-events:none; }
+        .diagram-wrapper.revealed { opacity:1; transform:scale(1); pointer-events:auto; }
+        .diagram-wrapper svg { width:100%; height:100%; display:block; }
+        .placeholder-msg { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#b8afaa; font-size:0.95rem; z-index:10; pointer-events:none; transition:opacity 0.5s; background:rgba(255,255,255,0.8); padding:12px 24px; border-radius:30px; }
+        .placeholder-msg.hidden { opacity:0; }
+        .score-row { display:flex; align-items:center; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+        .score-circle { width:70px; height:70px; border-radius:50%; background:conic-gradient(#c96b7a var(--score, 0)%, #e8dfd8 0%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
+        .score-inner { width:54px; height:54px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; color:#c96b7a; }
+        .ikigai-comment { flex:1; font-size:0.8rem; color:var(--text-light); line-height:1.7; text-align:left; letter-spacing:0.3px; font-style:italic; background:rgba(255,255,255,0.5); padding:12px 16px; border-radius:18px; border:1px solid rgba(255,255,255,0.6); }
+        .ikigai-comment strong { color:#c96b7a; font-style:normal; font-weight:700; display:block; margin-bottom:4px; font-size:0.85rem; }
+        .developer-signature { text-align:right; font-size:0.65rem; color:#b8afaa; letter-spacing:0.5px; margin-top:12px; opacity:0.7; font-weight:400; pointer-events:none; }
+        .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(255,255,255,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid rgba(255,255,255,0.5); display:flex; justify-content:space-around; padding:10px 10px 22px; z-index:100; border-radius:28px 28px 0 0; box-shadow:0 -4px 20px rgba(0,0,0,0.04); }
+        .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:0.7rem; font-weight:500; color:#b8afaa; cursor:pointer; transition:all 0.2s; padding:6px 14px; border-radius:20px; letter-spacing:0.3px; }
+        .nav-item.active { color:#c96b7a; background:rgba(201,107,122,0.08); }
+        .nav-item .nav-icon { font-size:1.3rem; }
+        @media (max-width:380px) { .app-container { gap:12px; } .glass-card { padding:18px 14px; } .app-header h1 { font-size:2.2rem; } .category-card { padding:12px; } .category-textarea { font-size:0.8rem; min-height:60px; } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="app-header"><h1>生 き 甲 斐</h1><p class="subtitle">ikigai · yaşam amacın</p></div>
+    <div class="tab-content active" id="tabDiscover">
+        <div class="glass-card">
+            <div class="category-card">
+                <div class="category-header"><span class="category-dot dot-love">♥</span> Sevdiğin Şey</div>
+                <textarea class="category-textarea" id="loveInput" placeholder="yazmak, doğa, müzik, öğretmek"></textarea>
+                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+            </div>
+            <div class="category-card">
+                <div class="category-header"><span class="category-dot dot-good">✦</span> İyi Olduğun Şey</div>
+                <textarea class="category-textarea" id="goodInput" placeholder="empati, yazmak, organize, ikna"></textarea>
+                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+            </div>
+            <div class="category-card">
+                <div class="category-header"><span class="category-dot dot-world">◈</span> Dünyanın İhtiyacı</div>
+                <textarea class="category-textarea" id="worldInput" placeholder="yalnızlıkla mücadele, çevre, eğitim"></textarea>
+                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+            </div>
+            <div class="category-card">
+                <div class="category-header"><span class="category-dot dot-money">⬢</span> Para Kazanabileceğin Şey</div>
+                <textarea class="category-textarea" id="moneyInput" placeholder="içerik üretmek, koçluk, yazılım"></textarea>
+                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+            </div>
+            <button class="btn-generate" onclick="createIkigai()">✦ İkigai Oluştur ✦</button>
+            <div class="warning-msg" id="warningMsg"></div>
+        </div>
+    </div>
+    <div class="tab-content" id="tabIkigai">
+        <div class="glass-card" style="padding:14px;">
+            <div class="diagram-wrapper" id="diagramWrapper">
+                <svg id="vennSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="gradLove" cx="30%" cy="30%"><stop offset="0%" stop-color="#f7c5cf"/><stop offset="100%" stop-color="#e8929f"/></radialGradient>
+                        <radialGradient id="gradGood" cx="70%" cy="30%"><stop offset="0%" stop-color="#bce6d8"/><stop offset="100%" stop-color="#7cc4ab"/></radialGradient>
+                        <radialGradient id="gradWorld" cx="30%" cy="70%"><stop offset="0%" stop-color="#d4caea"/><stop offset="100%" stop-color="#a894d4"/></radialGradient>
+                        <radialGradient id="gradMoney" cx="70%" cy="70%"><stop offset="0%" stop-color="#ffe0b8"/><stop offset="100%" stop-color="#f5be70"/></radialGradient>
+                    </defs>
+                    <circle cx="140" cy="140" r="115" fill="url(#gradLove)" opacity="0.55" style="mix-blend-mode:multiply;"/>
+                    <circle cx="260" cy="140" r="115" fill="url(#gradGood)" opacity="0.55" style="mix-blend-mode:multiply;"/>
+                    <circle cx="140" cy="260" r="115" fill="url(#gradWorld)" opacity="0.55" style="mix-blend-mode:multiply;"/>
+                    <circle cx="260" cy="260" r="115" fill="url(#gradMoney)" opacity="0.55" style="mix-blend-mode:multiply;"/>
+                    <text x="200" y="48" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtPassion">Tutku</text>
+                    <text x="42" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(-90,42,205)" id="txtMission">Misyon</text>
+                    <text x="358" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(90,358,205)" id="txtVocation">Meslek</text>
+                    <text x="200" y="348" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtProfession">İş/Geçim</text>
+                    <circle cx="200" cy="200" r="30" fill="white" opacity="0.95" stroke="#c96b7a" stroke-width="2"/>
+                    <text x="200" y="195" text-anchor="middle" font-size="7.5" fill="#c96b7a" font-weight="800" id="txtCenter">İKİGAİ</text>
+                    <text x="200" y="210" text-anchor="middle" font-size="6.5" fill="#4a4543" id="txtCenterSub"></text>
+                </svg>
+                <div class="placeholder-msg" id="placeholderMsg">🌸 Keşfet sekmesinden<br>ikigaini oluştur</div>
+            </div>
+            <div id="scorePanel" style="opacity:0; transition: opacity 0.5s;">
+                <div class="score-row">
+                    <div class="score-circle" id="scoreCircle" style="--score:0%;"><div class="score-inner" id="scoreText">0</div></div>
+                    <div class="ikigai-comment" id="ikigaiComment"><strong>İkigai Güç Skoru</strong> Henüz keşfedilmedi.</div>
+                </div>
+            </div>
+            <div class="developer-signature">developed by Fatih Miraç KOÇ 2026®</div>
+        </div>
+    </div>
+    <div class="tab-content" id="tabGuide">
+        <div class="glass-card" style="text-align:center;">
+            <h3 style="font-family:var(--font-jp);color:#c96b7a;font-size:1.4rem;margin-bottom:10px;">İkigai Nedir?</h3>
+            <p style="font-size:0.85rem;color:var(--text-light);line-height:1.7;">Japonca "iki" (yaşam) ve "gai" (değer)… Sabah sizi yataktan kaldıran o derin amaç.<br><span style="color:#c96b7a;">♥ Sevdiğin</span> · <span style="color:#5a9b85;">✦ İyi olduğun</span><br><span style="color:#7b6da0;">◈ Dünyanın ihtiyacı</span> · <span style="color:#b88a5c;">⬢ Kazanç sağladığın</span></p>
+        </div>
+    </div>
+    <div class="bottom-nav">
+        <div class="nav-item active" data-tab="tabDiscover" onclick="switchTab('tabDiscover', this)"><span class="nav-icon">🔍</span> Keşfet</div>
+        <div class="nav-item" data-tab="tabIkigai" onclick="switchTab('tabIkigai', this)"><span class="nav-icon">🎯</span> İkigai'm</div>
+        <div class="nav-item" data-tab="tabGuide" onclick="switchTab('tabGuide', this)"><span class="nav-icon">📖</span> Rehber</div>
+    </div>
+</div>
+<script>
+    function normalize(w) { return (w||'').toLocaleLowerCase('tr').replace(/i̇/g,'i').replace(/\s+/g,' ').trim(); }
+    function stemWord(w) { const n=normalize(w); return n.replace(/ler$|lar$|leri$|ları$|i$|ı$|u$|ü$|e$|a$/,'').replace(/mek$|mak$|me$|ma$|iş$|ış$|uş$|üş$|ım$|im$|um$|üm$/,'').replace(/cilik$|cılık$|culuk$|cülük$|lik$|lık$|luk$|lük$/,'').trim(); }
+    function getMeaningGroups(word) {
+        const n=normalize(word), stem=stemWord(n), groups=new Set([n,stem]);
+        const clusters=[['oyun','eğlence','hobi','vakit geçirmek','keyif'],['hayal','düşlemek','yaratıcı düşünce','imgelem','vizyon','rüya'],['yapmak','üretmek','inşa etmek','oluşturmak','ortaya koymak','icra'],['sıfırdan','baştan','yeniden','temel','orijinal','özgün'],['tamir','onarmak','düzeltmek','tamirat','bakım','onarım'],['el','manuel','zanaat','beceri','hüner','ustalık','el emeği','el işi'],['emek','çaba','uğraş','alın teri','iş gücü','zahmet'],['yemek','mutfak','aşçılık','pişirmek','gastronomi','lezzet','besin'],['eğitim','öğretmek','ders','okul','bilgi','öğrenim','eğitmen'],['eşitlik','adalet','hak','denge','eşit','adil','hukuk'],['ticaret','satış','pazarlama','alım satım','ticari','piyasa','müşteri'],['araba','otomobil','araç','vasıta','motor','taşıt']];
+        for(const c of clusters){ const cn=c.map(normalize); if(cn.some(x=>n.includes(x)||x.includes(n)||stem.includes(stemWord(x))||stemWord(x).includes(stem))) c.forEach(w=>groups.add(normalize(w))); }
+        return [...groups];
+    }
+    function isRelated(a,b){ if(normalize(a)===normalize(b)) return true; const ga=getMeaningGroups(a), gb=getMeaningGroups(b); return ga.some(x=>gb.includes(x)); }
+    function findIntersection(arr1,arr2){ const inter=[]; const used=new Set(); for(const item1 of arr1){ for(let j=0;j<arr2.length;j++){ if(used.has(j)) continue; if(isRelated(item1,arr2[j])){ inter.push({from:item1, to:arr2[j]}); used.add(j); break; } } } return inter; }
+    function findQuadCore(love,good,world,money){
+        const all=[...love,...good,...world,...money]; const nm=all.map(n=>({original:n, norm:normalize(n)})); const freq={}; const catPres={};
+        for(const item of nm){ const gr=getMeaningGroups(item.original); for(const g of gr){ freq[g]=(freq[g]||0)+1; if(!catPres[g]) catPres[g]=new Set(); if(love.some(l=>isRelated(l,item.original))) catPres[g].add('love'); if(good.some(l=>isRelated(l,item.original))) catPres[g].add('good'); if(world.some(l=>isRelated(l,item.original))) catPres[g].add('world'); if(money.some(l=>isRelated(l,item.original))) catPres[g].add('money'); } }
+        const cand=Object.entries(freq).filter(([_,c])=>c>=2).sort((a,b)=>{ const ca=catPres[a[0]]?.size||0, cb=catPres[b[0]]?.size||0; if(cb!==ca) return cb-ca; return b[1]-a[1]; });
+        if(cand.length===0){ const samp=[love[0],good[0],world[0],money[0]].filter(Boolean); if(samp.length>=3) return {core:samp.slice(0,3).join(', ')+' sentezi', items:samp.slice(0,3), score:15}; return {core:'senin benzersiz yolun', items:['Keşif'], score:10}; }
+        const best=cand[0]; const coreName=best[0].charAt(0).toLocaleUpperCase('tr')+best[0].slice(1); const catCount=catPres[best[0]]?.size||1;
+        let desc=coreName; if(catCount===4) desc=coreName+' ile Anlamlı Yaşam'; else if(catCount===3) desc=coreName+' Odaklı Yol'; else desc=coreName+' Ekseninde Keşif';
+        return {core:desc, items:[coreName], score:Math.min(95, catCount*22+cand.length*3)};
+    }
+    function parseItems(text) { if(!text||!text.trim()) return []; return text.split(/[,，;]+/).map(i=>i.trim()).filter(i=>i.length>=2).map(i=>i.charAt(0).toLocaleUpperCase('tr')+i.slice(1).toLocaleLowerCase('tr')); }
+    window.switchTab = function(tabId, navItem){
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+        if(navItem) navItem.classList.add('active');
+    };
+    window.createIkigai = function(){
+        const loveItems=parseItems(document.getElementById('loveInput').value);
+        const goodItems=parseItems(document.getElementById('goodInput').value);
+        const worldItems=parseItems(document.getElementById('worldInput').value);
+        const moneyItems=parseItems(document.getElementById('moneyInput').value);
+        const warn=document.getElementById('warningMsg');
+        const cats=[{name:'Sevdiğin Şey',items:loveItems},{name:'İyi Olduğun Şey',items:goodItems},{name:'Dünyanın İhtiyacı',items:worldItems},{name:'Para Kazanabileceğin Şey',items:moneyItems}];
+        const missing=cats.filter(c=>c.items.length<3);
+        if(missing.length>0){ warn.textContent='⚠️ "'+missing.map(c=>c.name).join('", "')+'" için en az 3 madde yazın.'; return; }
+        warn.textContent='';
+        const passion=findIntersection(loveItems,goodItems), mission=findIntersection(loveItems,worldItems), vocation=findIntersection(goodItems,moneyItems), profession=findIntersection(worldItems,moneyItems);
+        const ikigaiResult=findQuadCore(loveItems,goodItems,worldItems,moneyItems);
+        document.getElementById('txtPassion').textContent=passion.length?'Tutku: '+passion[0].from:'Tutku';
+        document.getElementById('txtMission').textContent=mission.length?'Misyon: '+mission[0].from:'Misyon';
+        document.getElementById('txtVocation').textContent=vocation.length?'Meslek: '+vocation[0].from:'Meslek';
+        document.getElementById('txtProfession').textContent=profession.length?'İş/Geçim: '+profession[0].from:'İş/Geçim';
+        document.getElementById('txtCenter').textContent='İKİGAİ';
+        document.getElementById('txtCenterSub').textContent=ikigaiResult.items[0];
+        document.getElementById('scoreCircle').style.setProperty('--score',ikigaiResult.score+'%');
+        document.getElementById('scoreText').textContent=ikigaiResult.score;
+        document.getElementById('ikigaiComment').innerHTML='<strong>✨ Senin İkigain:</strong> '+ikigaiResult.core+'. Bu, sevdiğin, iyi olduğun, dünyanın ihtiyaç duyduğu ve karşılığını alabileceğin alanların kesişiminde yatan öz benliğinin yansıması. Her sabah seni uyandıran o derin anlam burada saklı. Kendi benzersiz yolunda güvenle ilerle. 🌸';
+        document.getElementById('diagramWrapper').classList.add('revealed');
+        document.getElementById('placeholderMsg').classList.add('hidden');
+        document.getElementById('scorePanel').style.opacity='1';
+        switchTab('tabIkigai', document.querySelector('[data-tab="tabIkigai"]'));
+    };
+</script>
+</body>
+</html>
