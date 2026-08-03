@@ -21,7 +21,7 @@
             background-attachment: fixed; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
             padding: 16px; padding-bottom: 90px; color: var(--text);
-            -webkit-font-smoothing: antialiased; user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
         .app-container { width:100%; max-width:430px; display:flex; flex-direction:column; gap:18px; position:relative; }
         .glass-card {
@@ -88,26 +88,10 @@
     <div class="app-header"><h1>生 き 甲 斐</h1><p class="subtitle">ikigai · yaşam amacın</p></div>
     <div class="tab-content active" id="tabDiscover">
         <div class="glass-card">
-            <div class="category-card">
-                <div class="category-header"><span class="category-dot dot-love">♥</span> Sevdiğin Şey</div>
-                <textarea class="category-textarea" id="loveInput" placeholder="yazmak, doğa, müzik, öğretmek"></textarea>
-                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
-            </div>
-            <div class="category-card">
-                <div class="category-header"><span class="category-dot dot-good">✦</span> İyi Olduğun Şey</div>
-                <textarea class="category-textarea" id="goodInput" placeholder="empati, yazmak, organize, ikna"></textarea>
-                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
-            </div>
-            <div class="category-card">
-                <div class="category-header"><span class="category-dot dot-world">◈</span> Dünyanın İhtiyacı</div>
-                <textarea class="category-textarea" id="worldInput" placeholder="yalnızlıkla mücadele, çevre, eğitim"></textarea>
-                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
-            </div>
-            <div class="category-card">
-                <div class="category-header"><span class="category-dot dot-money">⬢</span> Para Kazanabileceğin Şey</div>
-                <textarea class="category-textarea" id="moneyInput" placeholder="içerik üretmek, koçluk, yazılım"></textarea>
-                <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
-            </div>
+            <div class="category-card"><div class="category-header"><span class="category-dot dot-love">♥</span> Sevdiğin Şey</div><textarea class="category-textarea" id="loveInput" placeholder="örnek: yazmak, doğa yürüyüşü, müzik dinlemek"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
+            <div class="category-card"><div class="category-header"><span class="category-dot dot-good">✦</span> İyi Olduğun Şey</div><textarea class="category-textarea" id="goodInput" placeholder="örnek: empati kurmak, organize etmek, yazı yazmak"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
+            <div class="category-card"><div class="category-header"><span class="category-dot dot-world">◈</span> Dünyanın İhtiyacı</div><textarea class="category-textarea" id="worldInput" placeholder="örnek: eğitimde eşitsizlik, çevre kirliliği, yalnızlık"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
+            <div class="category-card"><div class="category-header"><span class="category-dot dot-money">⬢</span> Para Kazanabileceğin Şey</div><textarea class="category-textarea" id="moneyInput" placeholder="örnek: içerik yazarlığı, koçluk, yazılım geliştirme"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
             <button class="btn-generate" onclick="createIkigai()">✦ İkigai Oluştur ✦</button>
             <div class="warning-msg" id="warningMsg"></div>
         </div>
@@ -159,65 +143,107 @@
 </div>
 <script>
     function norm(w) { return (w||'').toLocaleLowerCase('tr').replace(/i̇/g,'i').replace(/\s+/g,' ').trim(); }
-    function exactMatch(w1, w2) { return norm(w1) === norm(w2); }
 
-    // Tam eşleşme varsa onu kullan, yoksa anlam gruplarına geç
-    function findIkigaiCore(love, good, world, money) {
-        // 1. Dört kategoride de birebir aynı olan ifade var mı?
-        for (const item of love) {
-            if (good.some(g => exactMatch(g, item)) && world.some(w => exactMatch(w, item)) && money.some(m => exactMatch(m, item))) {
-                return { core: item + ' ile Anlamlı Yaşam', items: [item], score: 95 };
-            }
-        }
-        // 2. Üç kategoride birebir aynı olan
-        for (const item of love) {
-            if (good.some(g => exactMatch(g, item)) && world.some(w => exactMatch(w, item))) {
-                return { core: item + ' Odaklı Yol', items: [item], score: 75 };
-            }
-            if (good.some(g => exactMatch(g, item)) && money.some(m => exactMatch(m, item))) {
-                return { core: item + ' Odaklı Yol', items: [item], score: 75 };
-            }
-            if (world.some(w => exactMatch(w, item)) && money.some(m => exactMatch(m, item))) {
-                return { core: item + ' Odaklı Yol', items: [item], score: 75 };
-            }
-        }
-        // 3. İkili tam eşleşmeleri bul, en iyisini seç
-        const pairs = [];
-        for (const item of love) {
-            if (good.some(g => exactMatch(g, item))) pairs.push({ item, cats: ['love','good'] });
-            if (world.some(w => exactMatch(w, item))) pairs.push({ item, cats: ['love','world'] });
-            if (money.some(m => exactMatch(m, item))) pairs.push({ item, cats: ['love','money'] });
-        }
-        for (const item of good) {
-            if (world.some(w => exactMatch(w, item)) && !pairs.some(p => p.item === item && p.cats.includes('good') && p.cats.includes('world'))) pairs.push({ item, cats: ['good','world'] });
-            if (money.some(m => exactMatch(m, item)) && !pairs.some(p => p.item === item && p.cats.includes('good') && p.cats.includes('money'))) pairs.push({ item, cats: ['good','money'] });
-        }
-        for (const item of world) {
-            if (money.some(m => exactMatch(m, item)) && !pairs.some(p => p.item === item && p.cats.includes('world') && p.cats.includes('money'))) pairs.push({ item, cats: ['world','money'] });
-        }
-        if (pairs.length > 0) {
-            // En çok kategoriyi kapsayanı seç (zaten ikili)
-            const best = pairs[0];
-            return { core: best.item + ' Ekseninde Keşif', items: [best.item], score: 55 };
-        }
+    // GENİŞ KAVRAM HARİTASI - sonsuz kelime için altyapı
+    const conceptMap = {
+        'yaratıcılık': ['hayal etmek','hayal gücü','sıfırdan yapmak','tasarlamak','üretmek','icat etmek','yaratmak','sanat','yazmak','çizmek','boyamak','müzik','beste','şiir','özgün','fotoğraf','video','içerik','tasarım','grafik','animasyon','heykel','seramik','takı','dikiş','nakış','örgü','ahşap','marangozluk','demircilik'],
+        'zanaat': ['el emeği','el işi','zanaat','beceri','ustalık','hüner','tamir','onarmak','düzeltmek','bakım','restorasyon','yenilemek','kurtarmak','montaj','sökme','takma','lehim','kaynak'],
+        'yemek': ['yemek yapmak','aşçılık','pişirmek','mutfak','gastronomi','lezzet','tarif','pastacılık','fırın','beslenme','gıda','barista','kahve','demleme','sunum','sofra','servis'],
+        'eğitim': ['eğitim','öğretmek','ders','okul','bilgi','öğrenim','eğitmen','öğretici','koçluk','mentorluk','atölye','öğrenci','akademi','araştırma','kütüphane','kitap','okuma'],
+        'yardım': ['yardım etmek','destek','dayanışma','gönüllülük','iyileştirmek','şifa','terapi','danışmanlık','rehberlik','psikoloji','sosyal hizmet','yaşlı','engelli','hasta','bakım','dinlemek','empati'],
+        'adalet': ['eşitlik','adalet','hak','hukuk','denge','özgürlük','insan hakları','savunma','aktivizm','arabuluculuk','müzakere','siyaset','yönetim'],
+        'doğa': ['doğa','çevre','bahçe','tarım','hayvan','bitki','ekoloji','sürdürülebilirlik','organik','iklim','yeşil','toprak','su','hava','orman','deniz','dağ','kamp','yürüyüş'],
+        'teknoloji': ['yazılım','kod','uygulama','dijital','bilgisayar','telefon','yapay zeka','robot','web','internet','veri','siber','güvenlik','otomasyon','donanım','ağ','sunucu'],
+        'ticaret': ['ticaret','satış','pazarlama','alım satım','müşteri','piyasa','girişimcilik','işletme','marka','yatırım','finans','muhasebe','ekonomi','borsa','kripto'],
+        'hareket': ['spor','egzersiz','koşmak','yüzmek','fitness','dans','yoga','pilates','antrenman','sağlık','vücut','esneklik','dayanıklılık','maraton','bisiklet','tırmanış'],
+        'oyun': ['oyun','eğlence','hobi','keyif','eğlenmek','video oyun','kutu oyun','rol yapma','yarışma','bilardo','satranç','zeka oyunu','bulmaca','strateji'],
+        'iletişim': ['konuşmak','dinlemek','anlatmak','ikna','sunum','hitabet','sohbet','diyalog','medya','radyo','podcast','yayın','haber','róportaj','çeviri','dil','yabancı dil'],
+        'güzellik': ['makyaj','cilt bakımı','güzellik','saç','kuaför','kozmetik','estetik','moda','stil','kombin','alışveriş','trend'],
+        'ulaşım': ['araba','motor','uçak','gemi','tren','otobüs','şoför','pilot','kaptan','lojistik','nakliye','kurye','sürücü'],
+        'bilim': ['fizik','kimya','biyoloji','matematik','astronomi','laboratuvar','deney','gözlem','teleskop','mikroskop','formül','teori'],
+        'ruhsallık': ['meditasyon','yoga','nefes','farkındalık','bilinç','ruh','enerji','şifa','astroloji','tarot','spiritüel','inanç','ibadet'],
+        'müzik': ['şarkı','enstrüman','gitar','piyano','keman','davul','bateri','flüt','saksafon','orkestra','koro','solist','dj','prodüktör'],
+        'edebiyat': ['şiir','roman','hikaye','deneme','makale','yazar','şair','editör','yayın','kitap','kütüphane','okur'],
+        'tarih': ['tarih','geçmiş','belgesel','müze','arkeoloji','kazı','antik','eser','anıt','miras','kültür'],
+        'sinema': ['film','dizi','senaryo','yönetmen','oyuncu','kamera','kurgu','ses','ışık','set','prodüksiyon','vizyon']
+    };
 
-        // 4. Tam eşleşme yoksa anlam gruplarına geç (eski yöntem)
-        function stemWord(w) { const n=norm(w); return n.replace(/ler$|lar$|leri$|ları$|i$|ı$|u$|ü$|e$|a$/,'').replace(/mek$|mak$|me$|ma$|iş$|ış$|uş$|üş$|ım$|im$|um$|üm$/,'').replace(/cilik$|cılık$|culuk$|cülük$|lik$|lık$|luk$|lük$/,'').trim(); }
-        function getMeaningGroups(word) {
-            const n=norm(word), stem=stemWord(n), groups=new Set([n,stem]);
-            const clusters=[['oyun','eğlence','hobi','vakit geçirmek','keyif'],['hayal','düşlemek','yaratıcı düşünce','imgelem','vizyon','rüya'],['yapmak','üretmek','inşa etmek','oluşturmak','ortaya koymak','icra'],['sıfırdan','baştan','yeniden','temel','orijinal','özgün'],['tamir','onarmak','düzeltmek','tamirat','bakım','onarım'],['el','manuel','zanaat','beceri','hüner','ustalık','el emeği','el işi'],['emek','çaba','uğraş','alın teri','iş gücü','zahmet'],['yemek','mutfak','aşçılık','pişirmek','gastronomi','lezzet','besin'],['eğitim','öğretmek','ders','okul','bilgi','öğrenim','eğitmen'],['eşitlik','adalet','hak','denge','eşit','adil','hukuk'],['ticaret','satış','pazarlama','alım satım','ticari','piyasa','müşteri'],['araba','otomobil','araç','vasıta','motor','taşıt']];
-            for(const c of clusters){ const cn=c.map(norm); if(cn.some(x=>n.includes(x)||x.includes(n)||stem.includes(stemWord(x))||stemWord(x).includes(stem))) c.forEach(w=>groups.add(norm(w))); }
-            return [...groups];
+    function getConcepts(word) {
+        const n = norm(word); const concepts = new Set();
+        for (const [concept, keywords] of Object.entries(conceptMap)) {
+            if (keywords.some(k => norm(k) === n || n.includes(norm(k)) || norm(k).includes(n))) {
+                concepts.add(concept);
+            }
         }
-        function isRelated(a,b){ if(norm(a)===norm(b)) return true; const ga=getMeaningGroups(a), gb=getMeaningGroups(b); return ga.some(x=>gb.includes(x)); }
-        const all=[...love,...good,...world,...money]; const nm=all.map(n=>({original:n, norm:norm(n)})); const freq={}; const catPres={};
-        for(const item of nm){ const gr=getMeaningGroups(item.original); for(const g of gr){ freq[g]=(freq[g]||0)+1; if(!catPres[g]) catPres[g]=new Set(); if(love.some(l=>isRelated(l,item.original))) catPres[g].add('love'); if(good.some(l=>isRelated(l,item.original))) catPres[g].add('good'); if(world.some(l=>isRelated(l,item.original))) catPres[g].add('world'); if(money.some(l=>isRelated(l,item.original))) catPres[g].add('money'); } }
-        const cand=Object.entries(freq).filter(([_,c])=>c>=2).sort((a,b)=>{ const ca=catPres[a[0]]?.size||0, cb=catPres[b[0]]?.size||0; if(cb!==ca) return cb-ca; return b[1]-a[1]; });
-        if(cand.length===0){ const samp=[love[0],good[0],world[0],money[0]].filter(Boolean); if(samp.length>=3) return {core:samp.slice(0,3).join(', ')+' sentezi', items:samp.slice(0,3), score:15}; return {core:'senin benzersiz yolun', items:['Keşif'], score:10}; }
-        const best=cand[0]; const coreName=best[0].charAt(0).toLocaleUpperCase('tr')+best[0].slice(1); const catCount=catPres[best[0]]?.size||1;
-        let desc=coreName; if(catCount===4) desc=coreName+' ile Anlamlı Yaşam'; else if(catCount===3) desc=coreName+' Odaklı Yol'; else desc=coreName+' Ekseninde Keşif';
-        return {core:desc, items:[coreName], score:Math.min(90, catCount*20+5)};
+        if (concepts.size === 0 && n.length > 3) concepts.add(n);
+        return [...concepts];
     }
+
+    function analyzeIkigai(love, good, world, money) {
+        const cats = [love, good, world, money];
+        const allConcepts = new Set();
+        cats.forEach(cat => cat.forEach(item => getConcepts(item).forEach(c => allConcepts.add(c))));
+        let best = null; let maxScore = -1;
+        for (const concept of allConcepts) {
+            let present = 0; let weight = 0;
+            cats.forEach(cat => {
+                const itemsWith = cat.filter(i => getConcepts(i).includes(concept));
+                if (itemsWith.length > 0) { present++; weight += itemsWith.length; }
+            });
+            const score = present * 20 + weight * 3;
+            if (score > maxScore) { maxScore = score; best = concept; }
+        }
+        const catPresence = cats.filter(cat => cat.some(i => getConcepts(i).includes(best))).length;
+        const totalItems = cats.flat().length;
+        const finalScore = Math.min(95, Math.round((catPresence / 4) * 70 + (maxScore / (totalItems + 5)) * 30));
+        return { concept: best, categories: catPresence, score: finalScore || 10 };
+    }
+
+    const coreSentences = {
+        'yaratıcılık': 'Yaratıcı Ruhunla Dünyayı Güzelleştir',
+        'zanaat': 'Usta Ellerinle Değer ve Anlam Üret',
+        'yemek': 'Lezzet ve Bereketle İnsanları Birleştir',
+        'eğitim': 'Bilgelik Işığınla Geleceği Aydınlat',
+        'yardım': 'Şefkatli Dokunuşunla Dünyayı İyileştir',
+        'adalet': 'Cesur Sesinle Adalet ve Denge Getir',
+        'doğa': 'Doğanın Ritmiyle Uyumlu Bir Yaşam Kur',
+        'teknoloji': 'Dijital Zekânla Geleceğe Köprü Ol',
+        'ticaret': 'Değer Yaratma Sanatıyla Bolluk ve Refah İnşa Et',
+        'hareket': 'Sağlık ve Enerjiyle İnsanlara İlham Ver',
+        'oyun': 'Neşe ve Oyunla İnsan Ruhuna Dokun',
+        'iletişim': 'Kelimelerin Büyüsüyle İnsanları Bağla ve Dönüştür',
+        'güzellik': 'Estetik Dokunuşunla Özgüven İnşa Et',
+        'ulaşım': 'Hareketin Gücüyle Dünyayı Bağla',
+        'bilim': 'Merakın ve Keşfin Işığında Gerçeği Ara',
+        'ruhsallık': 'İçsel Yolculuğunla Huzur ve Anlam Yay',
+        'müzik': 'Sesin ve Ritmin Evrensel Diliyle Ruhları Okşa',
+        'edebiyat': 'Kelimelerin Gücüyle Dünyalar İnşa Et',
+        'tarih': 'Geçmişin Bilgeliğiyle Geleceği Şekillendir',
+        'sinema': 'Hikâyelerin Büyüsüyle İnsanları Dönüştür'
+    };
+
+    const comments = {
+        'yaratıcılık': 'İçindeki yaratıcı enerji, evrenin sana hediyesi. Düşüncelerini somut eserlere dönüştürme yeteneğin, dünyanın en çok ihtiyaç duyduğu şey: özgünlük ve güzellik. Yarat, paylaş ve ilham ol.',
+        'zanaat': 'Ellerinin emeği ve becerin, modern dünyanın kaybettiği o kadim değeri taşıyor. Onarmak, üretmek ve güzelleştirmek senin ruhunun en saf ifadesi. Bu yolda yürürken hem kendini hem çevreni dönüştüreceksin.',
+        'yemek': 'Mutfakta yarattığın lezzetler sadece bedenleri değil, ruhları da besliyor. İnsanları bir araya getiren, kültürleri buluşturan bu kadim sanatla dünyaya sıcaklık ve bolluk katıyorsun.',
+        'eğitim': 'Bilgiyi paylaşma tutkun, karanlıkta yanan bir meşale. Öğrettiğin her şey, geleceğe ektiğin bir tohum. Zihinlere ve kalplere dokunarak dünyayı sessizce ve derinden dönüştürüyorsun.',
+        'yardım': 'Başkalarının acısını dindirme, onlara destek olma arzun, seni yeryüzünün şifacısı yapıyor. Merhametin ve anlayışınla dokunduğun her hayat, senin sayende biraz daha umut doluyor.',
+        'adalet': 'Adalet duygun, pusulan. Dünyanın dengesizliklerine karşı duruşun, seni güçlü ve değerli kılıyor. Sesin ve eylemlerinle daha eşit, daha hakkaniyetli bir dünya inşa edebilirsin.',
+        'doğa': 'Doğayla kurduğun derin bağ, seni onun sesi ve koruyucusu yapıyor. Sürdürülebilir bir yaşam için verdiğin mücadele, gelecek nesillere bırakacağın en büyük miras.',
+        'teknoloji': 'Dijital dünyadaki ustalığınla çağın dilini konuşuyorsun. Kodların ve yenilikçi fikirlerinle sorunlara çözümler üreterek insanların hayatını kolaylaştırmak senin elinde.',
+        'ticaret': 'Değiş tokuşun ve değer yaratmanın kadim sanatında ustasın. İnsanların ihtiyaçlarını görüp onlara çözüm sunarak hem kendi hayatını hem de başkalarının hayatını zenginleştiriyorsun.',
+        'hareket': 'Hareket ve sağlık, senin felsefenin temeli. Bedeninin ve zihninin enerjisiyle çevrene ilham veriyor, insanlara daha canlı bir yaşamın kapılarını aralıyorsun.',
+        'oyun': 'Oyun oynamak sandığın kadar basit değil; insan ruhunun en derin besinlerinden biri. Neşeyi, yaratıcılığı ve rekabeti hayatın merkezine koyarak dünyaya hafiflik ve mutluluk katabilirsin.',
+        'iletişim': 'Kelimelerin ve sesin büyülü bir güce sahip. İnsanları anlamak, onlara dokunmak ve onları harekete geçirmek senin doğuştan gelen yeteneğin.',
+        'güzellik': 'Güzelliği yaratma ve ortaya çıkarma yeteneğin, insanlara özgüven ve mutluluk aşılıyor. Dokunduğun her şeyi güzelleştiriyorsun.',
+        'ulaşım': 'İnsanları ve eşyaları bir noktadan diğerine ulaştırma becerin, modern dünyanın damarlarında dolaşan kan gibi. Hareketin ve bağlantının ustasısın.',
+        'bilim': 'Merakın ve sorgulama gücün, seni gerçeğin peşinde bir kaşif yapıyor. Bilimsel düşünceyle dünyayı daha iyi bir yer haline getirebilirsin.',
+        'ruhsallık': 'İçsel yolculuğun ve ruhsal derinliğin, başkalarına rehberlik edebilecek bir bilgelik sunuyor. Huzur ve farkındalık seninle yayılıyor.',
+        'müzik': 'Sesin ve ritmin evrensel diliyle insanların kalbine dokunuyorsun. Müzik, senin aracılığınla dünyayı iyileştiriyor.',
+        'edebiyat': 'Kelimelerin gücüyle yeni dünyalar inşa ediyorsun. Hikâyelerin, insanların ufkunu açıyor ve onları dönüştürüyor.',
+        'tarih': 'Geçmişin bilgeliğini bugüne taşıyarak geleceği şekillendiriyorsun. Tarih, senin ellerinde canlanıyor ve dersler sunuyor.',
+        'sinema': 'Görüntü ve sesin büyüsüyle insanları başka diyarlara götürüyorsun. Hikâyelerin, toplumun aynası ve ilham kaynağı.'
+    };
 
     function parseItems(text) { if(!text||!text.trim()) return []; return text.split(/[,，;]+/).map(i=>i.trim()).filter(i=>i.length>=2).map(i=>i.charAt(0).toLocaleUpperCase('tr')+i.slice(1).toLocaleLowerCase('tr')); }
 
@@ -229,34 +255,26 @@
     };
 
     window.createIkigai = function(){
-        const loveItems=parseItems(document.getElementById('loveInput').value);
-        const goodItems=parseItems(document.getElementById('goodInput').value);
-        const worldItems=parseItems(document.getElementById('worldInput').value);
-        const moneyItems=parseItems(document.getElementById('moneyInput').value);
+        const love=parseItems(document.getElementById('loveInput').value), good=parseItems(document.getElementById('goodInput').value), world=parseItems(document.getElementById('worldInput').value), money=parseItems(document.getElementById('moneyInput').value);
         const warn=document.getElementById('warningMsg');
-        const cats=[{name:'Sevdiğin Şey',items:loveItems},{name:'İyi Olduğun Şey',items:goodItems},{name:'Dünyanın İhtiyacı',items:worldItems},{name:'Para Kazanabileceğin Şey',items:moneyItems}];
-        const missing=cats.filter(c=>c.items.length<3);
+        const allCats=[{name:'Sevdiğin Şey',items:love},{name:'İyi Olduğun Şey',items:good},{name:'Dünyanın İhtiyacı',items:world},{name:'Para Kazanabileceğin Şey',items:money}];
+        const missing=allCats.filter(c=>c.items.length<3);
         if(missing.length>0){ warn.textContent='⚠️ "'+missing.map(c=>c.name).join('", "')+'" için en az 3 madde yazın.'; return; }
         warn.textContent='';
-
-        const ikigaiResult = findIkigaiCore(loveItems, goodItems, worldItems, moneyItems);
-
-        // Kesişimleri bul (görsel için)
+        const result = analyzeIkigai(love,good,world,money);
+        const core = coreSentences[result.concept] || (result.concept.charAt(0).toUpperCase()+result.concept.slice(1)+' ile Anlamlı Yaşam');
+        const comment = comments[result.concept] || `"${result.concept}" teması, yaşam enerjinin merkezinde parlıyor. Bu yolda ilerlerken hem kendini gerçekleştirecek hem de dünyaya eşsiz bir iz bırakacaksın.`;
         function simpleIntersect(a,b){ return a.filter(x=>b.some(y=>norm(x)===norm(y))); }
-        const passion = simpleIntersect(loveItems,goodItems);
-        const mission = simpleIntersect(loveItems,worldItems);
-        const vocation = simpleIntersect(goodItems,moneyItems);
-        const profession = simpleIntersect(worldItems,moneyItems);
-
+        const passion=simpleIntersect(love,good), mission=simpleIntersect(love,world), vocation=simpleIntersect(good,money), profession=simpleIntersect(world,money);
         document.getElementById('txtPassion').textContent=passion.length?'Tutku: '+passion[0]:'Tutku';
         document.getElementById('txtMission').textContent=mission.length?'Misyon: '+mission[0]:'Misyon';
         document.getElementById('txtVocation').textContent=vocation.length?'Meslek: '+vocation[0]:'Meslek';
         document.getElementById('txtProfession').textContent=profession.length?'İş/Geçim: '+profession[0]:'İş/Geçim';
         document.getElementById('txtCenter').textContent='İKİGAİ';
-        document.getElementById('txtCenterSub').textContent=ikigaiResult.items[0];
-        document.getElementById('scoreCircle').style.setProperty('--score',ikigaiResult.score+'%');
-        document.getElementById('scoreText').textContent=ikigaiResult.score;
-        document.getElementById('ikigaiComment').innerHTML='<strong>✨ Senin İkigain:</strong> '+ikigaiResult.core+'. Bu, sevdiğin, iyi olduğun, dünyanın ihtiyaç duyduğu ve karşılığını alabileceğin alanların kesişiminde yatan öz benliğinin yansıması. Her sabah seni uyandıran o derin anlam burada saklı. Kendi benzersiz yolunda güvenle ilerle. 🌸';
+        document.getElementById('txtCenterSub').textContent=result.concept.charAt(0).toUpperCase()+result.concept.slice(1);
+        document.getElementById('scoreCircle').style.setProperty('--score',result.score+'%');
+        document.getElementById('scoreText').textContent=result.score;
+        document.getElementById('ikigaiComment').innerHTML='<strong>✨ Senin İkigain:</strong> '+core+'. '+comment+' 🌸';
         document.getElementById('diagramWrapper').classList.add('revealed');
         document.getElementById('placeholderMsg').classList.add('hidden');
         document.getElementById('scorePanel').style.opacity='1';
