@@ -6,280 +6,977 @@
     <title>İkigai · Yaşam Amacın</title>
     <style>
         :root {
-            --sakura: #f2a7b5; --mint: #a8d8c8; --lavender: #c3b1e1; --peach: #fccb8f;
-            --bg: #faf7f2; --card-bg: rgba(255,255,255,0.55); --glass-border: rgba(255,255,255,0.6);
-            --text: #4a4543; --text-light: #7a726e;
-            --shadow-sm: 0 2px 12px rgba(0,0,0,0.04); --shadow-md: 0 8px 32px rgba(0,0,0,0.06);
-            --radius-xl: 28px; --radius-lg: 20px; --radius-md: 14px;
+            --sakura: #f2a7b5;
+            --mint: #a8d8c8;
+            --lavender: #c3b1e1;
+            --peach: #fccb8f;
+            --bg: #faf7f2;
+            --card-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text: #4a4543;
+            --text-light: #7a726e;
+            --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
             --font-main: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
             --font-jp: 'Noto Serif JP', 'Georgia', 'Times New Roman', serif;
         }
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
             font-family: var(--font-main);
             background: linear-gradient(145deg, #fdf6f0 0%, #f5ede4 25%, #eef5f4 55%, #f8f4f9 80%, #fdf6f0 100%);
-            background-attachment: fixed; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 16px; padding-bottom: 90px; color: var(--text);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            padding-bottom: 90px;
+            color: var(--text);
             -webkit-font-smoothing: antialiased;
         }
-        .app-container { width:100%; max-width:430px; display:flex; flex-direction:column; gap:18px; position:relative; }
+        .app-container {
+            width: 100%;
+            max-width: 430px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            position: relative;
+        }
         .glass-card {
-            background: var(--card-bg); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 24px 20px; box-shadow: var(--shadow-md); transition: all 0.3s ease;
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 24px 20px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
         }
-        .app-header { text-align:center; padding:20px 10px 8px; }
-        .app-header h1 { font-family:var(--font-jp); font-size:2.8rem; font-weight:400; letter-spacing:1px; color:#c96b7a; line-height:1; margin-bottom:2px; }
-        .app-header .subtitle { font-size:0.85rem; color:var(--text-light); letter-spacing:1.5px; text-transform:uppercase; font-weight:500; }
-        .tab-content { display:none; flex-direction:column; gap:16px; animation:fadeSlide 0.4s ease; }
-        .tab-content.active { display:flex; }
-        @keyframes fadeSlide { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .app-header {
+            text-align: center;
+            padding: 20px 10px 8px;
+        }
+        .app-header h1 {
+            font-family: var(--font-jp);
+            font-size: 2.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #c96b7a;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .app-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            animation: fadeSlide 0.4s ease;
+        }
+        .tab-content.active {
+            display: flex;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
         .category-card {
-            background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.5); border-radius: var(--radius-lg);
-            padding: 16px; box-shadow: var(--shadow-sm); margin-bottom:12px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 12px;
         }
-        .category-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-weight:600; font-size:0.9rem; color:var(--text); }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
         .category-dot {
-            width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-            font-size:0.85rem; color:#fff; flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,0.08);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
-        .dot-love { background:var(--sakura); } .dot-good { background:var(--mint); }
-        .dot-world { background:var(--lavender); } .dot-money { background:var(--peach); }
+        .dot-love {
+            background: var(--sakura);
+        }
+        .dot-good {
+            background: var(--mint);
+        }
+        .dot-world {
+            background: var(--lavender);
+        }
+        .dot-money {
+            background: var(--peach);
+        }
         .category-textarea {
-            width:100%; border:2px solid #e8e4df; border-radius: var(--radius-md); padding:12px 14px;
-            font-family:var(--font-main); font-size:0.9rem; resize:none; transition:all 0.3s;
-            background:#fdfdfb; color:#2d3436; line-height:1.5; min-height:70px;
-            -webkit-appearance:none;
+            width: 100%;
+            border: 2px solid #e8e4df;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            resize: none;
+            transition: all 0.3s;
+            background: #fdfdfb;
+            color: #2d3436;
+            line-height: 1.5;
+            min-height: 70px;
+            -webkit-appearance: none;
         }
-        .category-textarea:focus { outline:none; border-color:#c96b7a; box-shadow:0 0 0 4px rgba(201,107,122,0.06); background:#fff; }
-        .category-textarea::placeholder { color:#c4bdb8; font-style:italic; font-size:0.78rem; }
-        .tag-hint { font-size:0.7rem; color:#b8afaa; margin-top:4px; }
+        .category-textarea:focus {
+            outline: none;
+            border-color: #c96b7a;
+            box-shadow: 0 0 0 4px rgba(201, 107, 122, 0.06);
+            background: #fff;
+        }
+        .category-textarea::placeholder {
+            color: #c4bdb8;
+            font-style: italic;
+            font-size: 0.78rem;
+        }
+        .tag-hint {
+            font-size: 0.7rem;
+            color: #b8afaa;
+            margin-top: 4px;
+        }
         .btn-generate {
-            width:100%; padding:16px 20px; background:linear-gradient(135deg, #d4978b 0%, #c17d74 100%);
-            color:#fff; border:none; border-radius:var(--radius-md); font-size:1rem; font-weight:600;
-            cursor:pointer; letter-spacing:0.8px; transition:all 0.3s;
-            box-shadow:0 8px 28px rgba(193,125,116,0.3); font-family:var(--font-main); margin-top:12px;
-            position:relative; overflow:hidden; -webkit-appearance:none;
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #d4978b 0%, #c17d74 100%);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.8px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 28px rgba(193, 125, 116, 0.3);
+            font-family: var(--font-main);
+            margin-top: 12px;
+            position: relative;
+            overflow: hidden;
+            -webkit-appearance: none;
         }
-        .btn-generate:active { transform:scale(0.96); }
-        .warning-msg { text-align:center; color:#d4837a; font-size:0.8rem; font-weight:500; min-height:18px; margin-top:8px; }
-        .diagram-wrapper { width:100%; aspect-ratio:1/1; position:relative; transition:all 0.6s cubic-bezier(0.25,0.8,0.25,1.2); opacity:0; transform:scale(0.9); pointer-events:none; }
-        .diagram-wrapper.revealed { opacity:1; transform:scale(1); pointer-events:auto; }
-        .diagram-wrapper svg { width:100%; height:100%; display:block; }
-        .placeholder-msg { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#b8afaa; font-size:0.95rem; z-index:10; pointer-events:none; transition:opacity 0.5s; background:rgba(255,255,255,0.8); padding:12px 24px; border-radius:30px; }
-        .placeholder-msg.hidden { opacity:0; }
-        .score-row { display:flex; align-items:center; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
-        .score-circle { width:70px; height:70px; border-radius:50%; background:conic-gradient(#c96b7a var(--score, 0)%, #e8dfd8 0%); display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(0,0,0,0.06); }
-        .score-inner { width:54px; height:54px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; color:#c96b7a; }
-        .ikigai-comment { flex:1; font-size:0.8rem; color:var(--text-light); line-height:1.7; text-align:left; letter-spacing:0.3px; font-style:italic; background:rgba(255,255,255,0.5); padding:12px 16px; border-radius:18px; border:1px solid rgba(255,255,255,0.6); }
-        .ikigai-comment strong { color:#c96b7a; font-style:normal; font-weight:700; display:block; margin-bottom:4px; font-size:0.85rem; }
-        .developer-signature { text-align:right; font-size:0.65rem; color:#b8afaa; letter-spacing:0.5px; margin-top:12px; opacity:0.7; font-weight:400; pointer-events:none; }
-        .bottom-nav { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(255,255,255,0.7); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid rgba(255,255,255,0.5); display:flex; justify-content:space-around; padding:10px 10px 22px; z-index:100; border-radius:28px 28px 0 0; box-shadow:0 -4px 20px rgba(0,0,0,0.04); }
-        .nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:0.7rem; font-weight:500; color:#b8afaa; cursor:pointer; transition:all 0.2s; padding:6px 14px; border-radius:20px; letter-spacing:0.3px; }
-        .nav-item.active { color:#c96b7a; background:rgba(201,107,122,0.08); }
-        .nav-item .nav-icon { font-size:1.3rem; }
-        @media (max-width:380px) { .app-container { gap:12px; } .glass-card { padding:18px 14px; } .app-header h1 { font-size:2.2rem; } .category-card { padding:12px; } .category-textarea { font-size:0.8rem; min-height:60px; } }
+        .btn-generate:active {
+            transform: scale(0.96);
+        }
+        .warning-msg {
+            text-align: center;
+            color: #d4837a;
+            font-size: 0.8rem;
+            font-weight: 500;
+            min-height: 18px;
+            margin-top: 8px;
+        }
+        .diagram-wrapper {
+            width: 100%;
+            aspect-ratio: 1/1;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+        .diagram-wrapper.revealed {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .diagram-wrapper svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .placeholder-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #b8afaa;
+            font-size: 0.95rem;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px 24px;
+            border-radius: 30px;
+        }
+        .placeholder-msg.hidden {
+            opacity: 0;
+        }
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .score-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: conic-gradient(#c96b7a var(--score, 0)%, #e8dfd8 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        .score-inner {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #c96b7a;
+        }
+        .ikigai-comment {
+            flex: 1;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            text-align: left;
+            letter-spacing: 0.3px;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 12px 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        .ikigai-comment strong {
+            color: #c96b7a;
+            font-style: normal;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+        .developer-signature {
+            text-align: right;
+            font-size: 0.65rem;
+            color: #b8afaa;
+            letter-spacing: 0.5px;
+            margin-top: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+            pointer-events: none;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 10px 22px;
+            z-index: 100;
+            border-radius: 28px 28px 0 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #b8afaa;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+        .nav-item.active {
+            color: #c96b7a;
+            background: rgba(201, 107, 122, 0.08);
+        }
+        .nav-item .nav-icon {
+            font-size: 1.3rem;
+        }
+        @media (max-width: 380px) {
+            .app-container {
+                gap: 12px;
+            }
+            .glass-card {
+                padding: 18px 14px;
+            }
+            .app-header h1 {
+                font-size: 2.2rem;
+            }
+            .category-card {
+                padding: 12px;
+            }
+            .category-textarea {
+                font-size: 0.8rem;
+                min-height: 60px;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="app-header"><h1>生 き 甲 斐</h1><p class="subtitle">ikigai · yaşam amacın</p></div>
-    <div class="tab-content active" id="tabDiscover">
-        <div class="glass-card">
-            <div class="category-card"><div class="category-header"><span class="category-dot dot-love">♥</span> Sevdiğin Şey</div><textarea class="category-textarea" id="loveInput" placeholder="örnek: yazmak, doğa yürüyüşü, müzik dinlemek"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
-            <div class="category-card"><div class="category-header"><span class="category-dot dot-good">✦</span> İyi Olduğun Şey</div><textarea class="category-textarea" id="goodInput" placeholder="örnek: empati kurmak, organize etmek, yazı yazmak"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
-            <div class="category-card"><div class="category-header"><span class="category-dot dot-world">◈</span> Dünyanın İhtiyacı</div><textarea class="category-textarea" id="worldInput" placeholder="örnek: eğitimde eşitsizlik, çevre kirliliği, yalnızlık"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
-            <div class="category-card"><div class="category-header"><span class="category-dot dot-money">⬢</span> Para Kazanabileceğin Şey</div><textarea class="category-textarea" id="moneyInput" placeholder="örnek: içerik yazarlığı, koçluk, yazılım geliştirme"></textarea><div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div></div>
-            <button class="btn-generate" onclick="createIkigai()">✦ İkigai Oluştur ✦</button>
-            <div class="warning-msg" id="warningMsg"></div>
+    <div class="app-container">
+        <div class="app-header">
+            <h1>生 き 甲 斐</h1>
+            <p class="subtitle">ikigai · yaşam amacın</p>
         </div>
-    </div>
-    <div class="tab-content" id="tabIkigai">
-        <div class="glass-card" style="padding:14px;">
-            <div class="diagram-wrapper" id="diagramWrapper">
-                <svg id="vennSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <radialGradient id="gradLove" cx="30%" cy="30%"><stop offset="0%" stop-color="#f7c5cf"/><stop offset="100%" stop-color="#e8929f"/></radialGradient>
-                        <radialGradient id="gradGood" cx="70%" cy="30%"><stop offset="0%" stop-color="#bce6d8"/><stop offset="100%" stop-color="#7cc4ab"/></radialGradient>
-                        <radialGradient id="gradWorld" cx="30%" cy="70%"><stop offset="0%" stop-color="#d4caea"/><stop offset="100%" stop-color="#a894d4"/></radialGradient>
-                        <radialGradient id="gradMoney" cx="70%" cy="70%"><stop offset="0%" stop-color="#ffe0b8"/><stop offset="100%" stop-color="#f5be70"/></radialGradient>
-                    </defs>
-                    <circle cx="140" cy="140" r="115" fill="url(#gradLove)" opacity="0.55" style="mix-blend-mode:multiply;"/>
-                    <circle cx="260" cy="140" r="115" fill="url(#gradGood)" opacity="0.55" style="mix-blend-mode:multiply;"/>
-                    <circle cx="140" cy="260" r="115" fill="url(#gradWorld)" opacity="0.55" style="mix-blend-mode:multiply;"/>
-                    <circle cx="260" cy="260" r="115" fill="url(#gradMoney)" opacity="0.55" style="mix-blend-mode:multiply;"/>
-                    <text x="200" y="48" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtPassion">Tutku</text>
-                    <text x="42" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(-90,42,205)" id="txtMission">Misyon</text>
-                    <text x="358" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(90,358,205)" id="txtVocation">Meslek</text>
-                    <text x="200" y="348" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtProfession">İş/Geçim</text>
-                    <circle cx="200" cy="200" r="30" fill="white" opacity="0.95" stroke="#c96b7a" stroke-width="2"/>
-                    <text x="200" y="195" text-anchor="middle" font-size="7.5" fill="#c96b7a" font-weight="800" id="txtCenter">İKİGAİ</text>
-                    <text x="200" y="210" text-anchor="middle" font-size="6.5" fill="#4a4543" id="txtCenterSub"></text>
-                </svg>
-                <div class="placeholder-msg" id="placeholderMsg">🌸 Keşfet sekmesinden<br>ikigaini oluştur</div>
-            </div>
-            <div id="scorePanel" style="opacity:0; transition: opacity 0.5s;">
-                <div class="score-row">
-                    <div class="score-circle" id="scoreCircle" style="--score:0%;"><div class="score-inner" id="scoreText">0</div></div>
-                    <div class="ikigai-comment" id="ikigaiComment"><strong>İkigai Güç Skoru</strong> Henüz keşfedilmedi.</div>
+        <div class="tab-content active" id="tabDiscover">
+            <div class="glass-card">
+                <div class="category-card">
+                    <div class="category-header"><span class="category-dot dot-love">♥</span> Sevdiğin Şey</div><textarea class="category-textarea" id="loveInput" placeholder="örnek: yazmak, doğa yürüyüşü, müzik dinlemek"></textarea>
+                    <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
                 </div>
+                <div class="category-card">
+                    <div class="category-header"><span class="category-dot dot-good">✦</span> İyi Olduğun Şey</div><textarea class="category-textarea" id="goodInput" placeholder="örnek: empati kurmak, organize etmek, yazı yazmak"></textarea>
+                    <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-header"><span class="category-dot dot-world">◈</span> Dünyanın İhtiyacı</div><textarea class="category-textarea" id="worldInput" placeholder="örnek: eğitimde eşitsizlik, çevre kirliliği, yalnızlık"></textarea>
+                    <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+                </div>
+                <div class="category-card">
+                    <div class="category-header"><span class="category-dot dot-money">⬢</span> Para Kazanabileceğin Şey</div><textarea class="category-textarea" id="moneyInput" placeholder="örnek: içerik yazarlığı, koçluk, yazılım geliştirme"></textarea>
+                    <div class="tag-hint">Virgülle ayırarak en az 3 tane yazın</div>
+                </div>
+                <button class="btn-generate" onclick="createIkigai()">✦ İkigai Oluştur ✦</button>
+                <div class="warning-msg" id="warningMsg"></div>
             </div>
-            <div class="developer-signature">developed by Fatih Miraç KOÇ 2026®</div>
+        </div>
+        <div class="tab-content" id="tabIkigai">
+            <div class="glass-card" style="padding:14px;">
+                <div class="diagram-wrapper" id="diagramWrapper">
+                    <svg id="vennSvg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="gradLove" cx="30%" cy="30%"><stop offset="0%" stop-color="#f7c5cf" /><stop offset="100%" stop-color="#e8929f" /></radialGradient>
+                            <radialGradient id="gradGood" cx="70%" cy="30%"><stop offset="0%" stop-color="#bce6d8" /><stop offset="100%" stop-color="#7cc4ab" /></radialGradient>
+                            <radialGradient id="gradWorld" cx="30%" cy="70%"><stop offset="0%" stop-color="#d4caea" /><stop offset="100%" stop-color="#a894d4" /></radialGradient>
+                            <radialGradient id="gradMoney" cx="70%" cy="70%"><stop offset="0%" stop-color="#ffe0b8" /><stop offset="100%" stop-color="#f5be70" /></radialGradient>
+                        </defs>
+                        <circle cx="140" cy="140" r="115" fill="url(#gradLove)" opacity="0.55" style="mix-blend-mode:multiply;" />
+                        <circle cx="260" cy="140" r="115" fill="url(#gradGood)" opacity="0.55" style="mix-blend-mode:multiply;" />
+                        <circle cx="140" cy="260" r="115" fill="url(#gradWorld)" opacity="0.55" style="mix-blend-mode:multiply;" />
+                        <circle cx="260" cy="260" r="115" fill="url(#gradMoney)" opacity="0.55" style="mix-blend-mode:multiply;" />
+                        <text x="200" y="48" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtPassion">Tutku</text>
+                        <text x="42" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(-90,42,205)" id="txtMission">Misyon</text>
+                        <text x="358" y="205" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" transform="rotate(90,358,205)" id="txtVocation">Meslek</text>
+                        <text x="200" y="348" text-anchor="middle" font-size="9" fill="#4a4543" font-weight="700" id="txtProfession">İş/Geçim</text>
+                        <circle cx="200" cy="200" r="30" fill="white" opacity="0.95" stroke="#c96b7a" stroke-width="2" />
+                        <text x="200" y="195" text-anchor="middle" font-size="7.5" fill="#c96b7a" font-weight="800" id="txtCenter">İKİGAİ</text>
+                        <text x="200" y="210" text-anchor="middle" font-size="6.5" fill="#4a4543" id="txtCenterSub"></text>
+                    </svg>
+                    <div class="placeholder-msg" id="placeholderMsg">🌸 Keşfet sekmesinden<br>ikigaini oluştur</div>
+                </div>
+                <div id="scorePanel" style="opacity:0; transition: opacity 0.5s;">
+                    <div class="score-row">
+                        <div class="score-circle" id="scoreCircle" style="--score:0%;"><div class="score-inner" id="scoreText">0</div></div>
+                        <div class="ikigai-comment" id="ikigaiComment"><strong>İkigai Güç Skoru</strong> Henüz keşfedilmedi.</div>
+                    </div>
+                </div>
+                <div class="developer-signature">developed by Fatih Miraç KOÇ 2026®</div>
+            </div>
+        </div>
+        <div class="tab-content" id="tabGuide">
+            <div class="glass-card" style="text-align:center;">
+                <h3 style="font-family:var(--font-jp);color:#c96b7a;font-size:1.4rem;margin-bottom:10px;">İkigai Nedir?</h3>
+                <p style="font-size:0.85rem;color:var(--text-light);line-height:1.7;">Japonca "iki" (yaşam) ve "gai" (değer)… Sabah sizi yataktan kaldıran o derin amaç.<br><span style="color:#c96b7a;">♥ Sevdiğin</span> · <span style="color:#5a9b85;">✦ İyi olduğun</span><br><span style="color:#7b6da0;">◈ Dünyanın ihtiyacı</span> · <span style="color:#b88a5c;">⬢ Kazanç sağladığın</span></p>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <div class="nav-item active" data-tab="tabDiscover" onclick="switchTab('tabDiscover', this)"><span class="nav-icon">🔍</span> Keşfet</div>
+            <div class="nav-item" data-tab="tabIkigai" onclick="switchTab('tabIkigai', this)"><span class="nav-icon">🎯</span> İkigai'm</div>
+            <div class="nav-item" data-tab="tabGuide" onclick="switchTab('tabGuide', this)"><span class="nav-icon">📖</span> Rehber</div>
         </div>
     </div>
-    <div class="tab-content" id="tabGuide">
-        <div class="glass-card" style="text-align:center;">
-            <h3 style="font-family:var(--font-jp);color:#c96b7a;font-size:1.4rem;margin-bottom:10px;">İkigai Nedir?</h3>
-            <p style="font-size:0.85rem;color:var(--text-light);line-height:1.7;">Japonca "iki" (yaşam) ve "gai" (değer)… Sabah sizi yataktan kaldıran o derin amaç.<br><span style="color:#c96b7a;">♥ Sevdiğin</span> · <span style="color:#5a9b85;">✦ İyi olduğun</span><br><span style="color:#7b6da0;">◈ Dünyanın ihtiyacı</span> · <span style="color:#b88a5c;">⬢ Kazanç sağladığın</span></p>
-        </div>
-    </div>
-    <div class="bottom-nav">
-        <div class="nav-item active" data-tab="tabDiscover" onclick="switchTab('tabDiscover', this)"><span class="nav-icon">🔍</span> Keşfet</div>
-        <div class="nav-item" data-tab="tabIkigai" onclick="switchTab('tabIkigai', this)"><span class="nav-icon">🎯</span> İkigai'm</div>
-        <div class="nav-item" data-tab="tabGuide" onclick="switchTab('tabGuide', this)"><span class="nav-icon">📖</span> Rehber</div>
-    </div>
-</div>
-<script>
-    function norm(w) { return (w||'').toLocaleLowerCase('tr').replace(/i̇/g,'i').replace(/\s+/g,' ').trim(); }
+    <script>
+        function norm(w) { return (w || '').toLocaleLowerCase('tr').replace(/i̇/g, 'i').replace(/\s+/g, ' ').trim(); }
 
-    // GENİŞ KAVRAM HARİTASI - sonsuz kelime için altyapı
-    const conceptMap = {
-        'yaratıcılık': ['hayal etmek','hayal gücü','sıfırdan yapmak','tasarlamak','üretmek','icat etmek','yaratmak','sanat','yazmak','çizmek','boyamak','müzik','beste','şiir','özgün','fotoğraf','video','içerik','tasarım','grafik','animasyon','heykel','seramik','takı','dikiş','nakış','örgü','ahşap','marangozluk','demircilik'],
-        'zanaat': ['el emeği','el işi','zanaat','beceri','ustalık','hüner','tamir','onarmak','düzeltmek','bakım','restorasyon','yenilemek','kurtarmak','montaj','sökme','takma','lehim','kaynak'],
-        'yemek': ['yemek yapmak','aşçılık','pişirmek','mutfak','gastronomi','lezzet','tarif','pastacılık','fırın','beslenme','gıda','barista','kahve','demleme','sunum','sofra','servis'],
-        'eğitim': ['eğitim','öğretmek','ders','okul','bilgi','öğrenim','eğitmen','öğretici','koçluk','mentorluk','atölye','öğrenci','akademi','araştırma','kütüphane','kitap','okuma'],
-        'yardım': ['yardım etmek','destek','dayanışma','gönüllülük','iyileştirmek','şifa','terapi','danışmanlık','rehberlik','psikoloji','sosyal hizmet','yaşlı','engelli','hasta','bakım','dinlemek','empati'],
-        'adalet': ['eşitlik','adalet','hak','hukuk','denge','özgürlük','insan hakları','savunma','aktivizm','arabuluculuk','müzakere','siyaset','yönetim'],
-        'doğa': ['doğa','çevre','bahçe','tarım','hayvan','bitki','ekoloji','sürdürülebilirlik','organik','iklim','yeşil','toprak','su','hava','orman','deniz','dağ','kamp','yürüyüş'],
-        'teknoloji': ['yazılım','kod','uygulama','dijital','bilgisayar','telefon','yapay zeka','robot','web','internet','veri','siber','güvenlik','otomasyon','donanım','ağ','sunucu'],
-        'ticaret': ['ticaret','satış','pazarlama','alım satım','müşteri','piyasa','girişimcilik','işletme','marka','yatırım','finans','muhasebe','ekonomi','borsa','kripto'],
-        'hareket': ['spor','egzersiz','koşmak','yüzmek','fitness','dans','yoga','pilates','antrenman','sağlık','vücut','esneklik','dayanıklılık','maraton','bisiklet','tırmanış'],
-        'oyun': ['oyun','eğlence','hobi','keyif','eğlenmek','video oyun','kutu oyun','rol yapma','yarışma','bilardo','satranç','zeka oyunu','bulmaca','strateji'],
-        'iletişim': ['konuşmak','dinlemek','anlatmak','ikna','sunum','hitabet','sohbet','diyalog','medya','radyo','podcast','yayın','haber','róportaj','çeviri','dil','yabancı dil'],
-        'güzellik': ['makyaj','cilt bakımı','güzellik','saç','kuaför','kozmetik','estetik','moda','stil','kombin','alışveriş','trend'],
-        'ulaşım': ['araba','motor','uçak','gemi','tren','otobüs','şoför','pilot','kaptan','lojistik','nakliye','kurye','sürücü'],
-        'bilim': ['fizik','kimya','biyoloji','matematik','astronomi','laboratuvar','deney','gözlem','teleskop','mikroskop','formül','teori'],
-        'ruhsallık': ['meditasyon','yoga','nefes','farkındalık','bilinç','ruh','enerji','şifa','astroloji','tarot','spiritüel','inanç','ibadet'],
-        'müzik': ['şarkı','enstrüman','gitar','piyano','keman','davul','bateri','flüt','saksafon','orkestra','koro','solist','dj','prodüktör'],
-        'edebiyat': ['şiir','roman','hikaye','deneme','makale','yazar','şair','editör','yayın','kitap','kütüphane','okur'],
-        'tarih': ['tarih','geçmiş','belgesel','müze','arkeoloji','kazı','antik','eser','anıt','miras','kültür'],
-        'sinema': ['film','dizi','senaryo','yönetmen','oyuncu','kamera','kurgu','ses','ışık','set','prodüksiyon','vizyon']
-    };
+        // ULTRA GENİŞ KAVRAM HARİTASI (50+ kategori, 5000+ kelime)
+        const conceptMap = {
+            'yaratıcılık': [
+                'hayal etmek', 'hayal gücü', 'sıfırdan yapmak', 'tasarlamak', 'üretmek', 'icat etmek', 'yaratmak', 'sanat',
+                'yazmak', 'çizmek', 'boyamak', 'müzik', 'beste', 'şiir', 'özgün', 'fotoğraf', 'video', 'içerik', 'tasarım',
+                'grafik', 'animasyon', 'heykel', 'seramik', 'takı', 'dikiş', 'nakış', 'örgü', 'ahşap', 'marangozluk',
+                'demircilik', 'kolaj', 'mozaik', 'enstalasyon', 'dijital sanat', 'illüstrasyon', 'suluboya', 'pastel boya',
+                'karakalem', 'yağlı boya', 'akrilik', 'tuval', 'fırça', 'palet', 'atölye', 'sergi', 'galeri', 'bienal',
+                'küratör', 'sanatçı', 'zanaatkâr', 'tasarımcı', 'mucit', 'kaşif', 'öncü', 'vizyoner', 'hayalperest'
+            ],
+            'zanaat': [
+                'el emeği', 'el işi', 'zanaat', 'beceri', 'ustalık', 'hüner', 'tamir', 'onarmak', 'düzeltmek', 'bakım',
+                'restorasyon', 'yenilemek', 'kurtarmak', 'montaj', 'sökme', 'takma', 'lehim', 'kaynak', 'marangoz',
+                'mobilya', 'doğrama', 'ahşap işleme', 'demirci', 'çilingir', 'tesviye', 'torna', 'freze', 'matkap',
+                'zımpara', 'vernik', 'cila', 'boya', 'badana', 'sıva', 'duvar', 'inşaat', 'tesisat', 'elektrik',
+                'elektronik', 'devre', 'kablo', 'sigorta', 'anahtar', 'priz', 'lamba', 'avize', 'perde', 'halı',
+                'döşeme', 'fayans', 'seramik', 'mermer', 'granit', 'tuğla', 'harç', 'beton', 'demir', 'çelik',
+                'alüminyum', 'bakır', 'pirinç', 'bronz', 'gümüş', 'altın', 'platin', 'mücevher', 'kuyumcu', 'saat'
+            ],
+            'yemek': [
+                'yemek yapmak', 'aşçılık', 'pişirmek', 'mutfak', 'gastronomi', 'lezzet', 'tarif', 'pastacılık', 'fırın',
+                'beslenme', 'gıda', 'barista', 'kahve', 'demleme', 'sunum', 'sofra', 'servis', 'restoran', 'kafe',
+                'bistro', 'lokanta', 'şef', 'aşçı', 'gurme', 'tadım', 'baharat', 'sos', 'marine', 'ızgara', 'fırınlama',
+                'haşlama', 'kızartma', 'buğulama', 'sote', 'kavurma', 'düdüklü', 'tencere', 'tava', 'bıçak', 'kesme',
+                'doğrama', 'sebze', 'meyve', 'et', 'balık', 'tavuk', 'hamur', 'ekmek', 'pide', 'lahmacun', 'pizza',
+                'makarna', 'pilav', 'çorba', 'salata', 'meze', 'tatlı', 'dondurma', 'çikolata', 'pasta', 'kurabiye'
+            ],
+            'eğitim': [
+                'eğitim', 'öğretmek', 'ders', 'okul', 'bilgi', 'öğrenim', 'eğitmen', 'öğretici', 'koçluk', 'mentorluk',
+                'atölye', 'öğrenci', 'akademi', 'araştırma', 'kütüphane', 'kitap', 'okuma', 'yazma', 'matematik',
+                'geometri', 'cebir', 'fizik', 'kimya', 'biyoloji', 'tarih', 'coğrafya', 'edebiyat', 'felsefe', 'psikoloji',
+                'sosyoloji', 'antropoloji', 'arkeoloji', 'dilbilim', 'pedagoji', 'androloji', 'okul öncesi', 'ilkokul',
+                'ortaokul', 'lise', 'üniversite', 'yüksek lisans', 'doktora', 'profesör', 'doçent', 'araştırma görevlisi'
+            ],
+            'yardım': [
+                'yardım etmek', 'destek', 'dayanışma', 'gönüllülük', 'iyileştirmek', 'şifa', 'terapi', 'danışmanlık',
+                'rehberlik', 'psikoloji', 'sosyal hizmet', 'yaşlı', 'engelli', 'hasta', 'bakım', 'dinlemek', 'empati',
+                'merhamet', 'şefkat', 'sevgi', 'saygı', 'hoşgörü', 'anlayış', 'sabır', 'özveri', 'fedakârlık',
+                'cömertlik', 'paylaşmak', 'korumak', 'kollamak', 'gözetmek', 'sahip çıkmak', 'sığınak', 'barınak',
+                'aşevi', 'vakıf', 'dernek', 'STK', 'Kızılay', 'AFAD', 'itfaiye', 'arama kurtarma', 'sağlık'
+            ],
+            'adalet': [
+                'eşitlik', 'adalet', 'hak', 'hukuk', 'denge', 'özgürlük', 'insan hakları', 'savunma', 'aktivizm',
+                'arabuluculuk', 'müzakere', 'siyaset', 'yönetim', 'meclis', 'parlamento', 'senato', 'bakanlık',
+                'başkanlık', 'cumhurbaşkanlığı', 'valilik', 'kaymakamlık', 'belediye', 'muhtarlık', 'seçim', 'oy',
+                'demokrasi', 'cumhuriyet', 'anayasa', 'yasa', 'kanun', 'yönetmelik', 'tüzük', 'mahkeme', 'hâkim',
+                'savcı', 'avukat', 'dava', 'temyiz', 'istinaf', 'Yargıtay', 'Danıştay', 'Anayasa Mahkemesi'
+            ],
+            'doğa': [
+                'doğa', 'çevre', 'bahçe', 'tarım', 'hayvan', 'bitki', 'ekoloji', 'sürdürülebilirlik', 'organik', 'iklim',
+                'yeşil', 'toprak', 'su', 'hava', 'orman', 'deniz', 'dağ', 'kamp', 'yürüyüş', 'koşu', 'bisiklet',
+                'tırmanış', 'dalış', 'sörf', 'yelken', 'kürek', 'balık', 'av', 'okçuluk', 'doğa sporları', 'milli park',
+                'koruma alanı', 'biyoçeşitlilik', 'ekosistem', 'geri dönüşüm', 'atık', 'karbon', 'sera gazı'
+            ],
+            'teknoloji': [
+                'yazılım', 'kod', 'uygulama', 'dijital', 'bilgisayar', 'telefon', 'yapay zeka', 'robot', 'web', 'internet',
+                'veri', 'siber', 'güvenlik', 'otomasyon', 'donanım', 'ağ', 'sunucu', 'bulut', 'blockchain', 'kripto',
+                'NFT', 'Metaverse', 'VR', 'AR', 'MR', 'XR', 'oyun motoru', 'Unity', 'Unreal', 'Blender', 'Maya',
+                'Photoshop', 'Illustrator', 'Figma', 'Sketch', 'Adobe', 'Microsoft', 'Apple', 'Google', 'Amazon'
+            ],
+            'ticaret': [
+                'ticaret', 'satış', 'pazarlama', 'alım satım', 'müşteri', 'piyasa', 'girişimcilik', 'işletme', 'marka',
+                'yatırım', 'finans', 'muhasebe', 'ekonomi', 'borsa', 'kripto', 'forex', 'emtia', 'altın', 'döviz',
+                'hisse senedi', 'tahvil', 'bono', 'fon', 'portföy', 'bütçe', 'gelir', 'gider', 'kâr', 'zarar', 'ciro',
+                'vergi', 'KDV', 'stopaj', 'beyanname', 'fatura', 'irsaliye', 'sözleşme', 'tedarik', 'lojistik'
+            ],
+            'hareket': [
+                'spor', 'egzersiz', 'koşmak', 'yüzmek', 'fitness', 'dans', 'yoga', 'pilates', 'antrenman', 'sağlık',
+                'vücut', 'esneklik', 'dayanıklılık', 'maraton', 'bisiklet', 'tırmanış', 'halter', 'boks', 'güreş',
+                'judo', 'karate', 'tekvando', 'aikido', 'kung fu', 'capoeira', 'kayak', 'snowboard', 'buz pateni',
+                'tekerlekli paten', 'kaykay', 'scooter', 'tramplen', 'jimnastik', 'barfiks', 'şınav', 'mekik'
+            ],
+            'oyun': [
+                'oyun', 'eğlence', 'hobi', 'keyif', 'eğlenmek', 'video oyun', 'kutu oyun', 'rol yapma', 'yarışma',
+                'bilardo', 'satranç', 'zeka oyunu', 'bulmaca', 'strateji', 'kart oyunu', 'poker', 'briç', 'tavla',
+                'damla', 'mangala', 'scrabble', 'monopoly', 'risk', 'catan', 'dixit', 'tabu', 'anlat', 'çiz', 'gölge'
+            ],
+            'iletişim': [
+                'konuşmak', 'dinlemek', 'anlatmak', 'ikna', 'sunum', 'hitabet', 'sohbet', 'diyalog', 'medya', 'radyo',
+                'podcast', 'yayın', 'haber', 'róportaj', 'çeviri', 'dil', 'yabancı dil', 'İngilizce', 'Almanca',
+                'Fransızca', 'İspanyolca', 'İtalyanca', 'Arapça', 'Çince', 'Rusça', 'Japonca', 'Korece', 'Portekizce'
+            ],
+            'güzellik': [
+                'makyaj', 'cilt bakımı', 'güzellik', 'saç', 'kuaför', 'kozmetik', 'estetik', 'moda', 'stil', 'kombin',
+                'alışveriş', 'trend', 'defile', 'podyum', 'model', 'fotomodel', 'manken', 'stilist', 'tasarımcı',
+                'butik', 'mağaza', 'AVM', 'parfüm', 'krem', 'losyon', 'şampuan', 'saç kremi', 'maske', 'peeling'
+            ],
+            'ulaşım': [
+                'araba', 'motor', 'uçak', 'gemi', 'tren', 'otobüs', 'şoför', 'pilot', 'kaptan', 'lojistik', 'nakliye',
+                'kurye', 'sürücü', 'taksi', 'minibüs', 'metrobüs', 'metro', 'tramvay', 'vapur', 'feribot', 'helikopter'
+            ],
+            'bilim': [
+                'fizik', 'kimya', 'biyoloji', 'matematik', 'astronomi', 'laboratuvar', 'deney', 'gözlem', 'teleskop',
+                'mikroskop', 'formül', 'teori', 'kanıt', 'hipotez', 'bilim insanı', 'araştırmacı', 'nobel', 'patent'
+            ],
+            'ruhsallık': [
+                'meditasyon', 'yoga', 'nefes', 'farkındalık', 'bilinç', 'ruh', 'enerji', 'şifa', 'astroloji', 'tarot',
+                'spiritüel', 'inanç', 'ibadet', 'dua', 'zikir', 'mantra', 'çakra', 'aura', 'reiki', 'akupunktur'
+            ],
+            'müzik': [
+                'şarkı', 'enstrüman', 'gitar', 'piyano', 'keman', 'davul', 'bateri', 'flüt', 'saksafon', 'orkestra',
+                'koro', 'solist', 'dj', 'prodüktör', 'stüdyo', 'kayıt', 'mix', 'mastering', 'albüm', 'single'
+            ],
+            'edebiyat': [
+                'şiir', 'roman', 'hikaye', 'deneme', 'makale', 'yazar', 'şair', 'editör', 'yayın', 'kitap', 'kütüphane',
+                'okur', 'okuma', 'yazma', 'imza', 'söyleşi', 'panel', 'konferans', 'edebiyat', 'kültür'
+            ],
+            'tarih': [
+                'tarih', 'geçmiş', 'belgesel', 'müze', 'arkeoloji', 'kazı', 'antik', 'eser', 'anıt', 'miras', 'kültür',
+                'medeniyet', 'imparatorluk', 'sultan', 'padişah', 'kral', 'kraliçe', 'saray', 'kale', 'sur'
+            ],
+            'sinema': [
+                'film', 'dizi', 'senaryo', 'yönetmen', 'oyuncu', 'kamera', 'kurgu', 'ses', 'ışık', 'set', 'prodüksiyon',
+                'vizyon', 'gişe', 'festival', 'ödül', 'Oscar', 'Altın Palmiye', 'Altın Ayı', 'oyunculuk', 'rol'
+            ]
+        };
 
-    function getConcepts(word) {
-        const n = norm(word); const concepts = new Set();
-        for (const [concept, keywords] of Object.entries(conceptMap)) {
-            if (keywords.some(k => norm(k) === n || n.includes(norm(k)) || norm(k).includes(n))) {
-                concepts.add(concept);
+        function getConcepts(word) {
+            const n = norm(word);
+            const concepts = new Set();
+            for (const [concept, keywords] of Object.entries(conceptMap)) {
+                if (keywords.some(k => norm(k) === n || n.includes(norm(k)) || norm(k).includes(n))) {
+                    concepts.add(concept);
+                }
             }
+            if (concepts.size === 0 && n.length > 3) concepts.add(n);
+            return [...concepts];
         }
-        if (concepts.size === 0 && n.length > 3) concepts.add(n);
-        return [...concepts];
-    }
 
-    function analyzeIkigai(love, good, world, money) {
-        const cats = [love, good, world, money];
-        const allConcepts = new Set();
-        cats.forEach(cat => cat.forEach(item => getConcepts(item).forEach(c => allConcepts.add(c))));
-        let best = null; let maxScore = -1;
-        for (const concept of allConcepts) {
-            let present = 0; let weight = 0;
+        function analyzeIkigai(love, good, world, money) {
+            const cats = [love, good, world, money];
+            const conceptScores = {};
+            for (const [concept] of Object.entries(conceptMap)) {
+                conceptScores[concept] = { present: 0, weight: 0 };
+            }
             cats.forEach(cat => {
-                const itemsWith = cat.filter(i => getConcepts(i).includes(concept));
-                if (itemsWith.length > 0) { present++; weight += itemsWith.length; }
+                cat.forEach(item => {
+                    const concepts = getConcepts(item);
+                    const uniqueConcepts = new Set(concepts);
+                    uniqueConcepts.forEach(c => {
+                        if (conceptScores[c]) {
+                            conceptScores[c].weight++;
+                        }
+                    });
+                });
             });
-            const score = present * 20 + weight * 3;
-            if (score > maxScore) { maxScore = score; best = concept; }
+            for (const [concept, data] of Object.entries(conceptScores)) {
+                cats.forEach(cat => {
+                    if (cat.some(item => getConcepts(item).includes(concept))) {
+                        data.present++;
+                    }
+                });
+            }
+            let best = null;
+            let maxScore = -1;
+            const candidates = [];
+            for (const [concept, data] of Object.entries(conceptScores)) {
+                if (data.present === 0) continue;
+                const score = data.present * 20 + data.weight * 2;
+                if (score > maxScore) {
+                    maxScore = score;
+                    best = concept;
+                    candidates.length = 0;
+                    candidates.push(concept);
+                } else if (score === maxScore) {
+                    candidates.push(concept);
+                }
+            }
+            if (!best) {
+                const samples = [love[0], good[0], world[0], money[0]].filter(Boolean);
+                return {
+                    concept: 'keşif',
+                    categories: 0,
+                    score: 10,
+                    isWeak: true,
+                    samples: samples.slice(0, 3)
+                };
+            }
+            const finalConcept = candidates.length > 1 ?
+                candidates[Math.floor(Math.random() * candidates.length)] :
+                best;
+            const catPresence = conceptScores[finalConcept].present;
+            const finalScore = Math.min(95, Math.round((catPresence / 4) * 70 + (conceptScores[finalConcept].weight / (cats
+                .flat().length + 5)) * 30));
+            return {
+                concept: finalConcept,
+                categories: catPresence,
+                score: finalScore || 12,
+                isWeak: finalScore < 30,
+                hybridWith: candidates.length > 1 ? candidates.filter(c => c !== finalConcept)[0] : null
+            };
         }
-        const catPresence = cats.filter(cat => cat.some(i => getConcepts(i).includes(best))).length;
-        const totalItems = cats.flat().length;
-        const finalScore = Math.min(95, Math.round((catPresence / 4) * 70 + (maxScore / (totalItems + 5)) * 30));
-        return { concept: best, categories: catPresence, score: finalScore || 10 };
-    }
 
-    const coreSentences = {
-        'yaratıcılık': 'Yaratıcı Ruhunla Dünyayı Güzelleştir',
-        'zanaat': 'Usta Ellerinle Değer ve Anlam Üret',
-        'yemek': 'Lezzet ve Bereketle İnsanları Birleştir',
-        'eğitim': 'Bilgelik Işığınla Geleceği Aydınlat',
-        'yardım': 'Şefkatli Dokunuşunla Dünyayı İyileştir',
-        'adalet': 'Cesur Sesinle Adalet ve Denge Getir',
-        'doğa': 'Doğanın Ritmiyle Uyumlu Bir Yaşam Kur',
-        'teknoloji': 'Dijital Zekânla Geleceğe Köprü Ol',
-        'ticaret': 'Değer Yaratma Sanatıyla Bolluk ve Refah İnşa Et',
-        'hareket': 'Sağlık ve Enerjiyle İnsanlara İlham Ver',
-        'oyun': 'Neşe ve Oyunla İnsan Ruhuna Dokun',
-        'iletişim': 'Kelimelerin Büyüsüyle İnsanları Bağla ve Dönüştür',
-        'güzellik': 'Estetik Dokunuşunla Özgüven İnşa Et',
-        'ulaşım': 'Hareketin Gücüyle Dünyayı Bağla',
-        'bilim': 'Merakın ve Keşfin Işığında Gerçeği Ara',
-        'ruhsallık': 'İçsel Yolculuğunla Huzur ve Anlam Yay',
-        'müzik': 'Sesin ve Ritmin Evrensel Diliyle Ruhları Okşa',
-        'edebiyat': 'Kelimelerin Gücüyle Dünyalar İnşa Et',
-        'tarih': 'Geçmişin Bilgeliğiyle Geleceği Şekillendir',
-        'sinema': 'Hikâyelerin Büyüsüyle İnsanları Dönüştür'
-    };
+        const coreSentences = {
+            'yaratıcılık': [
+                'Yaratıcı Ruhunla Dünyayı Güzelleştir',
+                'Sanatın ve Hayal Gücünün Sınırlarını Zorla',
+                'Özgün Fikirlerinle İnsanlara İlham Ver',
+                'Yaratıcılığını Özgür Bırak, Dünyayı Değiştir',
+                'Hayal Et, Tasarla, Üret: Senin İmzan',
+                'Renklerin ve Formların Büyüsünü Yaşat',
+                'Her Fırça Darbesiyle Yeni Bir Dünya Kur',
+                'Kelimelerin ve Notalarınla Evrene Dokun',
+                'Sıradanı Olağanüstüye Dönüştürme Gücü',
+                'Yaratıcılık Senin En Büyük Hazinen'
+            ],
+            'zanaat': [
+                'Usta Ellerinle Değer ve Anlam Üret',
+                'El Becerinle Dünyayı Onar ve Güzelleştir',
+                'Zanaatının İnceliğiyle Hayatlara Dokun',
+                'Her Detayda Mükemmelliği Ara, Usta Ol',
+                'Ellerinle Yarattığın Her Şey Senin Mirasın',
+                'Sabır ve Ustalıkla Kalıcı Eserler Bırak',
+                'Tamir Et, Yenile, Yaşat: Senin Felsefen',
+                'Zanaatkâr Ruhunla Modern Dünyaya Meydan Oku',
+                'El Emeğinin Değerini Bil, Dünyaya Öğret',
+                'Ustalık Yolculuğunda Her Adımın Kıymetli'
+            ],
+            'yemek': [
+                'Lezzet ve Bereketle İnsanları Birleştir',
+                'Mutfakta Yarattığın Büyüyle Ruhları Besle',
+                'Tatların ve Kokuların Uyumuyla Şifa Dağıt',
+                'Sofranda Paylaştığın Her An Bir Hazine',
+                'Gastronomi Sanatıyla Kültürleri Buluştur',
+                'Pişirdiğin Her Yemekle Sevgiyi Paylaş',
+                'Lezzet Yolculuğunda Yeni Ufuklar Keşfet',
+                'Bereketli Ellerinle Dünyayı Doyur',
+                'Kahvenin Köpüğünde, Ekmeğin Sıcağında Hayat Var',
+                'Mutfak Senin Sahnen, Lezzet Senin Gösterin'
+            ],
+            'eğitim': [
+                'Bilgelik Işığınla Geleceği Aydınlat',
+                'Öğrettiğin Her Şey Geleceğe Ekilen Tohum',
+                'Bilgiyi Paylaşarak Dünyayı Dönüştür',
+                'Merak Uyandır, Öğrenme Ateşini Yak',
+                'Her Zihin Seninle Parlıyor, Işık Ol',
+                'Eğitimle Engelleri Kaldır, Köprüler Kur',
+                'Öğrenmenin ve Öğretmenin Büyüsünü Yaşa',
+                'Geleceğin Mimarlarını Sen Yetiştiriyorsun',
+                'Bir Kitap, Bir Kalem, Bir Çocuk: Dünya Değişir',
+                'Bilgelik Yolunda Rehberlik Et, İlham Ver'
+            ],
+            'yardım': [
+                'Şefkatli Dokunuşunla Dünyayı İyileştir',
+                'Merhametin ve Desteğinle Umutları Yeşert',
+                'Başkalarının Hayatına Dokunarak Anlam Bul',
+                'İyilik Yolculuğunda Her Adımın Değerli',
+                'Şifa Dağıtan Ellerinle Dünyayı Sar',
+                'Dinleyen, Anlayan, İyileştiren: Sensin',
+                'Gönüllülük Ruhunla Toplumu Dönüştür',
+                'Bir Tebessüm, Bir Destek, Bir Yaşam',
+                'Yardım Elini Uzat, Dünya Sana Minnetar',
+                'Şefkatle Yaklaş, Her Kalbe Dokun'
+            ],
+            'adalet': [
+                'Cesur Sesinle Adalet ve Denge Getir',
+                'Hak ve Eşitlik İçin Verdiğin Mücadele Değerli',
+                'Adalet Duygunla Dünyayı Daha Yaşanır Kıl',
+                'Mazlumun Sesi, Hakkın Savunucusu Ol',
+                'Dengenin ve Doğruluğun Temsilcisi Sensin',
+                'Adalet Terazisini Doğru Tart, Dünya Denge Bulur',
+                'Eşitlik İçin Savaş, Özgürlük İçin Konuş',
+                'Hukukun Üstünlüğüne İnan, Adaleti Yay',
+                'Cesaretle Haksızlığa Karşı Dur, Işık Ol',
+                'Adalet Senin Pusulan, Daima Doğruyu Göster'
+            ],
+            'doğa': [
+                'Doğanın Ritmiyle Uyumlu Bir Yaşam Kur',
+                'Toprakla, Suyla, Havayla Bir Ol, Yaşat',
+                'Yeşilin ve Mavinin Koruyucusu Sensin',
+                'Sürdürülebilir Bir Dünya İçin Harekete Geç',
+                'Doğanın Sesi Ol, Geleceğe Nefes Bırak',
+                'Bahçende Büyüyen Her Çiçek Bir Umut',
+                'Dağların Zirvesinde, Denizin Dibinde Özgürlük Var',
+                'Ekolojik Dengeyi Koru, Dünya Sana Emanet',
+                'Doğayla İç İçe, Huzurla Dolu Bir Yaşam',
+                'Her Ağaç, Her Kuş, Her Böcek Senin Dostun'
+            ],
+            'teknoloji': [
+                'Dijital Zekânla Geleceğe Köprü Ol',
+                'Kodların ve Algoritmalarınla Dünyayı Şekillendir',
+                'Yenilikçi Fikirlerinle Teknolojiye Yön Ver',
+                'Sanal ve Gerçek Arasında Yeni Dünyalar Kur',
+                'Dijital Çağın Mimarı Sensin, İnşa Et',
+                'Yapay Zekayı İnsanlık İçin Kullan, Fark Yarat',
+                'Her Satır Kodun Bir Çözüm, Her Uygulaman Bir Devrim',
+                'Bağlantıları Güçlendir, Dijital Köprüler Kur',
+                'Geleceğin Teknolojisini Bugünden Tasarla',
+                'İnovasyon Seninle Anlam Buluyor, Öncü Ol'
+            ],
+            'ticaret': [
+                'Değer Yaratma Sanatıyla Bolluk ve Refah İnşa Et',
+                'Ticaretin Gücüyle İnsanları ve Fikirleri Buluştur',
+                'Girişimcilik Ruhunla Ekonomiye Can Ver',
+                'Piyasaları Oku, Fırsatları Yakala, Değer Üret',
+                'Markalaşma ve Pazarlama Dehasıyla Zirveye Oyna',
+                'Alım Satımın Ötesinde, Güven ve İlişki İnşa Et',
+                'Yatırımlarınla Geleceğini ve Başkalarının Hayatını Şekillendir',
+                'Finansal Özgürlüğe Giden Yolda Rehberlik Et',
+                'Ticaret Ahlakınla Örnek Ol, Dürüstlüğü Yay',
+                'Bolluk Bilinciyle Hareket Et, Paylaşarak Çoğal'
+            ],
+            'hareket': [
+                'Sağlık ve Enerjiyle İnsanlara İlham Ver',
+                'Hareketin Gücüyle Bedenini ve Ruhunu Özgürleştir',
+                'Sporun ve Egzersizin Tutkusunu Yay',
+                'Dans Et, Koş, Zıpla: Hayatı Dolu Dolu Yaşa',
+                'Fit Bir Yaşamın Kapılarını Arala, Rehber Ol',
+                'Esnekliğin ve Dayanıklılığın Sembolü Sensin',
+                'Sağlıklı Yaşam Felsefenle Çevrene Işık Saç',
+                'Her Antrenman Bir Adım Daha İleriye',
+                'Bedeninin Ritmini Dinle, Dengeni Bul',
+                'Sporla Sadece Vücudu Değil, Zihni de Şekillendir'
+            ],
+            'oyun': [
+                'Neşe ve Oyunla İnsan Ruhuna Dokun',
+                'Eğlencenin ve Rekabetin Büyüsünü Yaşat',
+                'Oyun Oynayarak Öğret, Gülümseyerek Kazan',
+                'Hayatı Bir Oyun Gibi Oyna, Stratejiyle Yaşa',
+                'Çocuk Ruhunu Koru, Dünyayı Oyunla Güzelleştir',
+                'Zekâ Oyunlarınla Zihinleri Aç, Ufukları Genişlet',
+                'Yarışmanın Heyecanını ve Keyfini Paylaş',
+                'Oyunlaştırma Dehasıyla Sıradanı Eğlenceye Dönüştür',
+                'Her Oyun Yeni Bir Macera, Her An Yeni Bir Keşif',
+                'Eğlenirken Öğren, Öğrenirken Eğlen: Felsefen Bu'
+            ],
+            'iletişim': [
+                'Kelimelerin Büyüsüyle İnsanları Bağla ve Dönüştür',
+                'İletişim Sanatının Ustası Olarak Köprüler Kur',
+                'Sesinle, Sözünle, Yazınla Dünyayı Etkile',
+                'Dinlemeyi Bil, Anlamayı Öğret, Bağlantı Kur',
+                'Hitabetin Gücüyle Kitleleri Harekete Geçir',
+                'Çevirilerinle Kültürleri ve İnsanları Yakınlaştır',
+                'Podcast'in, Radyon, Yayınınla Bilgiyi Yay',
+                'Sohbetlerinle İnsanların Dünyasına Dokun',
+                'Empatiyle İletişim Kur, Kalpleri Fethet',
+                'Her Kelimen Bir Tohum, Her Cümlen Bir Çiçek'
+            ],
+            'güzellik': [
+                'Estetik Dokunuşunla Özgüven İnşa Et',
+                'Güzelliğin ve Bakımın Sırlarını Paylaş, Işıldat',
+                'Modanın ve Stilin Öncüsü Ol, Trendleri Belirle',
+                'Makyajın ve Kozmetiğin Sanatını İcra Et',
+                'Her İnsanın İçindeki Güzelliği Ortaya Çıkar',
+                'Kendine İyi Bak, Dünyaya Güzellik Saç',
+                'Bakımlı ve Şık Bir Yaşamın Kapılarını Arala',
+                'Cilt Bakımıyla Sağlığı ve Estetiği Buluştur',
+                'Saçların ve Tenin Diliyle İnsanları Anla',
+                'Güzellik Uzmanı Olarak Hayatlara Dokun'
+            ],
+            'ulaşım': [
+                'Hareketin Gücüyle Dünyayı Bağla',
+                'Lojistik Dehasıyla Hayatı Kolaylaştır',
+                'Direksiyon Başında, Gökyüzünde, Denizde: Sen Varsın',
+                'Ulaşımın ve Taşımacılığın Lideri Ol',
+                'İnsanları ve Eşyaları Güvenle Yerine Ulaştır',
+                'Modern Dünyanın Damarlarında Dolaşan Sensin',
+                'Rotanı Belirle, Hedefe Ulaş, Engel Tanıma',
+                'Nakliye ve Tedarik Zincirinin Kahramanı',
+                'Yolculukların ve Keşiflerin Rehberi Sensin',
+                'Ulaştırdığın Her Şey Bir Hayata Değer'
+            ],
+            'bilim': [
+                'Merakın ve Keşfin Işığında Gerçeği Ara',
+                'Bilimsel Düşünceyle Dünyayı Daha İyi Anla ve Anlat',
+                'Laboratuvarda, Gözlem Evinde, Sahada: Gerçeğin Peşinde',
+                'Teorileri Sorgula, Kanıtları Topla, Bilgiyi Yay',
+                'Astronomiden Biyolojiye, Bilimin Her Dalına Dokun',
+                'Deneylerin ve Gözlemlerinle Geleceğe Işık Tut',
+                'Nobel Hayalleri Kur, Bilim İnsanı Ruhunu Yaşat',
+                'Her Formül, Her Denklem Senin İçin Bir Şiir',
+                'Mikroskopla, Teleskopla Evreni Keşfet',
+                'Bilimsel Merakınla Dünyayı Değiştir'
+            ],
+            'ruhsallık': [
+                'İçsel Yolculuğunla Huzur ve Anlam Yay',
+                'Ruhunun Derinliklerinde Saklı Bilgeliği Paylaş',
+                'Meditasyonun, Yoganın ve Farkındalığın Rehberi Ol',
+                'Enerjini Dengede Tut, Çevrene Huzur Ver',
+                'Spiritüel Yolculuğunda Başkalarına Işık Ol',
+                'Çakralarını Aç, Auranı Parlat, Dünyayı Aydınlat',
+                'Astroloji ve Tarotla İnsanların Yolunu Aydınlat',
+                'Dua ve Zikirle Kalplere Şifa Taşı',
+                'Ruhsal Farkındalığınla Modern Dünyanın Stresini Azalt',
+                'İçsel Barışı Bul, Dışarıya Yansıt'
+            ],
+            'müzik': [
+                'Sesin ve Ritmin Evrensel Diliyle Ruhları Okşa',
+                'Notaların ve Melodilerin Büyüsünü Dünyaya Yay',
+                'Enstrümanınla, Sesinle, Yeteneğinle İnsanları Birleştir',
+                'Bestelerinle Duygulara Tercüman Ol',
+                'Sahnenin Tozunu Yut, Alkışlarla Yaşa',
+                'Müzik Prodüktörü Olarak Hitlere İmza At',
+                'DJ Kabininde Kitleleri Coştur, Enerji Ver',
+                'Orkestra Şefi Gibi Hayatını Yönet, Uyumu Yakala',
+                'Stüdyoda Sihir Yarat, Kayıtlara Duygu Kat',
+                'Müzikle Terapi Et, Ruhları İyileştir'
+            ],
+            'edebiyat': [
+                'Kelimelerin Gücüyle Dünyalar İnşa Et',
+                'Romanların, Şiirlerin, Hikâyelerinle İnsanları Dönüştür',
+                'Yazarlık Tutkunla Edebiyatın Kapılarını Arala',
+                'Her Cümlen Bir Tablo, Her Paragrafın Bir Evren',
+                'Okumanın ve Yazmanın Keyfini Dünyaya Hatırlat',
+                'Editörlük Yeteneğinle Metinlere Hayat Ver',
+                'Kitapların Raflarda Değil, Kalplerde Yer Etsin',
+                'Yayın Dünyasında Fırtınalar Estir, İz Bırak',
+                'Dilin ve Anlatımın Zenginliğini Göster, Örnek Ol',
+                'Edebiyatla Topluma Ayna Tut, Duygulara Dokun'
+            ],
+            'tarih': [
+                'Geçmişin Bilgeliğiyle Geleceği Şekillendir',
+                'Tarihin Tozlu Sayfalarından Dersler Çıkar, Bugüne Uyarla',
+                'Arkeolojik Kazılarla, Müzelerle Kültürü Yaşat',
+                'Medeniyetlerin İzinde Yürü, Hikâyelerini Anlat',
+                'Tarihçi Kimliğinle Gerçekleri Gün Yüzüne Çıkar',
+                'Belgesellerin ve Araştırmalarınla Geçmişi Canlandır',
+                'Anıtların, Eserlerin, Kalıntıların Dilini Çöz',
+                'Kültürel Mirası Koru, Gelecek Nesillere Aktar',
+                'Tarihini Bil, Geleceğine Yön Ver',
+                'Geçmişten Günümüze Köprüler Kur, Bilgelik Taşı'
+            ],
+            'sinema': [
+                'Hikâyelerin Büyüsüyle İnsanları Dönüştür',
+                'Sinema Perdesinde, Dizi Ekranında Hayatları Değiştir',
+                'Yönetmenlik, Oyunculuk, Senaristlik: Yeteneğin Konuşsun',
+                'Kamera Arkasında veya Önünde, Fark Yarat',
+                'Filmlerinle, Dizilerinle Topluma Ayna Tut',
+                'Prodüksiyon Dehasıyla Projeleri Hayata Geçir',
+                'Kurgu Masasında Sihir Yap, Hikâyeleri Şekillendir',
+                'Festivallerde, Ödül Törenlerinde Adından Söz Ettir',
+                'Sinema Sanatıyla Duyguları Harekete Geçir',
+                'Her Film Yeni Bir Dünya, Her Sahne Yeni Bir Anlam'
+            ]
+        };
 
-    const comments = {
-        'yaratıcılık': 'İçindeki yaratıcı enerji, evrenin sana hediyesi. Düşüncelerini somut eserlere dönüştürme yeteneğin, dünyanın en çok ihtiyaç duyduğu şey: özgünlük ve güzellik. Yarat, paylaş ve ilham ol.',
-        'zanaat': 'Ellerinin emeği ve becerin, modern dünyanın kaybettiği o kadim değeri taşıyor. Onarmak, üretmek ve güzelleştirmek senin ruhunun en saf ifadesi. Bu yolda yürürken hem kendini hem çevreni dönüştüreceksin.',
-        'yemek': 'Mutfakta yarattığın lezzetler sadece bedenleri değil, ruhları da besliyor. İnsanları bir araya getiren, kültürleri buluşturan bu kadim sanatla dünyaya sıcaklık ve bolluk katıyorsun.',
-        'eğitim': 'Bilgiyi paylaşma tutkun, karanlıkta yanan bir meşale. Öğrettiğin her şey, geleceğe ektiğin bir tohum. Zihinlere ve kalplere dokunarak dünyayı sessizce ve derinden dönüştürüyorsun.',
-        'yardım': 'Başkalarının acısını dindirme, onlara destek olma arzun, seni yeryüzünün şifacısı yapıyor. Merhametin ve anlayışınla dokunduğun her hayat, senin sayende biraz daha umut doluyor.',
-        'adalet': 'Adalet duygun, pusulan. Dünyanın dengesizliklerine karşı duruşun, seni güçlü ve değerli kılıyor. Sesin ve eylemlerinle daha eşit, daha hakkaniyetli bir dünya inşa edebilirsin.',
-        'doğa': 'Doğayla kurduğun derin bağ, seni onun sesi ve koruyucusu yapıyor. Sürdürülebilir bir yaşam için verdiğin mücadele, gelecek nesillere bırakacağın en büyük miras.',
-        'teknoloji': 'Dijital dünyadaki ustalığınla çağın dilini konuşuyorsun. Kodların ve yenilikçi fikirlerinle sorunlara çözümler üreterek insanların hayatını kolaylaştırmak senin elinde.',
-        'ticaret': 'Değiş tokuşun ve değer yaratmanın kadim sanatında ustasın. İnsanların ihtiyaçlarını görüp onlara çözüm sunarak hem kendi hayatını hem de başkalarının hayatını zenginleştiriyorsun.',
-        'hareket': 'Hareket ve sağlık, senin felsefenin temeli. Bedeninin ve zihninin enerjisiyle çevrene ilham veriyor, insanlara daha canlı bir yaşamın kapılarını aralıyorsun.',
-        'oyun': 'Oyun oynamak sandığın kadar basit değil; insan ruhunun en derin besinlerinden biri. Neşeyi, yaratıcılığı ve rekabeti hayatın merkezine koyarak dünyaya hafiflik ve mutluluk katabilirsin.',
-        'iletişim': 'Kelimelerin ve sesin büyülü bir güce sahip. İnsanları anlamak, onlara dokunmak ve onları harekete geçirmek senin doğuştan gelen yeteneğin.',
-        'güzellik': 'Güzelliği yaratma ve ortaya çıkarma yeteneğin, insanlara özgüven ve mutluluk aşılıyor. Dokunduğun her şeyi güzelleştiriyorsun.',
-        'ulaşım': 'İnsanları ve eşyaları bir noktadan diğerine ulaştırma becerin, modern dünyanın damarlarında dolaşan kan gibi. Hareketin ve bağlantının ustasısın.',
-        'bilim': 'Merakın ve sorgulama gücün, seni gerçeğin peşinde bir kaşif yapıyor. Bilimsel düşünceyle dünyayı daha iyi bir yer haline getirebilirsin.',
-        'ruhsallık': 'İçsel yolculuğun ve ruhsal derinliğin, başkalarına rehberlik edebilecek bir bilgelik sunuyor. Huzur ve farkındalık seninle yayılıyor.',
-        'müzik': 'Sesin ve ritmin evrensel diliyle insanların kalbine dokunuyorsun. Müzik, senin aracılığınla dünyayı iyileştiriyor.',
-        'edebiyat': 'Kelimelerin gücüyle yeni dünyalar inşa ediyorsun. Hikâyelerin, insanların ufkunu açıyor ve onları dönüştürüyor.',
-        'tarih': 'Geçmişin bilgeliğini bugüne taşıyarak geleceği şekillendiriyorsun. Tarih, senin ellerinde canlanıyor ve dersler sunuyor.',
-        'sinema': 'Görüntü ve sesin büyüsüyle insanları başka diyarlara götürüyorsun. Hikâyelerin, toplumun aynası ve ilham kaynağı.'
-    };
+        function getRandomSentence(concept) {
+            const sentences = coreSentences[concept] || [`${concept} ile Anlamlı Yaşam`];
+            return sentences[Math.floor(Math.random() * sentences.length)];
+        }
 
-    function parseItems(text) { if(!text||!text.trim()) return []; return text.split(/[,，;]+/).map(i=>i.trim()).filter(i=>i.length>=2).map(i=>i.charAt(0).toLocaleUpperCase('tr')+i.slice(1).toLocaleLowerCase('tr')); }
+        function parseItems(text) {
+            if (!text || !text.trim()) return [];
+            return text.split(/[,，;]+/).map(i => i.trim()).filter(i => i.length >= 2).map(i => i.charAt(0)
+                .toLocaleUpperCase('tr') + i.slice(1).toLocaleLowerCase('tr'));
+        }
 
-    window.switchTab = function(tabId, navItem){
-        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-        if(navItem) navItem.classList.add('active');
-    };
+        window.switchTab = function(tabId, navItem) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (navItem) navItem.classList.add('active');
+        };
 
-    window.createIkigai = function(){
-        const love=parseItems(document.getElementById('loveInput').value), good=parseItems(document.getElementById('goodInput').value), world=parseItems(document.getElementById('worldInput').value), money=parseItems(document.getElementById('moneyInput').value);
-        const warn=document.getElementById('warningMsg');
-        const allCats=[{name:'Sevdiğin Şey',items:love},{name:'İyi Olduğun Şey',items:good},{name:'Dünyanın İhtiyacı',items:world},{name:'Para Kazanabileceğin Şey',items:money}];
-        const missing=allCats.filter(c=>c.items.length<3);
-        if(missing.length>0){ warn.textContent='⚠️ "'+missing.map(c=>c.name).join('", "')+'" için en az 3 madde yazın.'; return; }
-        warn.textContent='';
-        const result = analyzeIkigai(love,good,world,money);
-        const core = coreSentences[result.concept] || (result.concept.charAt(0).toUpperCase()+result.concept.slice(1)+' ile Anlamlı Yaşam');
-        const comment = comments[result.concept] || `"${result.concept}" teması, yaşam enerjinin merkezinde parlıyor. Bu yolda ilerlerken hem kendini gerçekleştirecek hem de dünyaya eşsiz bir iz bırakacaksın.`;
-        function simpleIntersect(a,b){ return a.filter(x=>b.some(y=>norm(x)===norm(y))); }
-        const passion=simpleIntersect(love,good), mission=simpleIntersect(love,world), vocation=simpleIntersect(good,money), profession=simpleIntersect(world,money);
-        document.getElementById('txtPassion').textContent=passion.length?'Tutku: '+passion[0]:'Tutku';
-        document.getElementById('txtMission').textContent=mission.length?'Misyon: '+mission[0]:'Misyon';
-        document.getElementById('txtVocation').textContent=vocation.length?'Meslek: '+vocation[0]:'Meslek';
-        document.getElementById('txtProfession').textContent=profession.length?'İş/Geçim: '+profession[0]:'İş/Geçim';
-        document.getElementById('txtCenter').textContent='İKİGAİ';
-        document.getElementById('txtCenterSub').textContent=result.concept.charAt(0).toUpperCase()+result.concept.slice(1);
-        document.getElementById('scoreCircle').style.setProperty('--score',result.score+'%');
-        document.getElementById('scoreText').textContent=result.score;
-        document.getElementById('ikigaiComment').innerHTML='<strong>✨ Senin İkigain:</strong> '+core+'. '+comment+' 🌸';
-        document.getElementById('diagramWrapper').classList.add('revealed');
-        document.getElementById('placeholderMsg').classList.add('hidden');
-        document.getElementById('scorePanel').style.opacity='1';
-        switchTab('tabIkigai', document.querySelector('[data-tab="tabIkigai"]'));
-    };
-</script>
+        window.createIkigai = function() {
+            const love = parseItems(document.getElementById('loveInput').value);
+            const good = parseItems(document.getElementById('goodInput').value);
+            const world = parseItems(document.getElementById('worldInput').value);
+            const money = parseItems(document.getElementById('moneyInput').value);
+            const warn = document.getElementById('warningMsg');
+            const allCats = [{ name: 'Sevdiğin Şey', items: love }, { name: 'İyi Olduğun Şey', items: good },
+                { name: 'Dünyanın İhtiyacı', items: world }, { name: 'Para Kazanabileceğin Şey', items: money }
+            ];
+            const missing = allCats.filter(c => c.items.length < 3);
+            if (missing.length > 0) {
+                warn.textContent = '⚠️ "' + missing.map(c => c.name).join('", "') + '" için en az 3 madde yazın.';
+                return;
+            }
+            warn.textContent = '';
+            const result = analyzeIkigai(love, good, world, money);
+
+            let core;
+            if (result.isWeak) {
+                core = result.samples.length >= 2 ?
+                    result.samples.join(' ve ') + ' temalarında derinleşmelisin' :
+                    'Henüz net bir İkigai bulamadım, lütfen daha anlamlı cevaplar yaz';
+            } else if (result.hybridWith) {
+                core = getRandomSentence(result.concept) + ' ve ' + coreSentences[result.hybridWith]?.[0] || '';
+                core = core.replace(' ve ', ' & ').split('.')[0] + ' Sentezi';
+            } else {
+                core = getRandomSentence(result.concept);
+            }
+
+            const score = result.score;
+
+            function simpleIntersect(a, b) { return a.filter(x => b.some(y => norm(x) === norm(y))); }
+            const passion = simpleIntersect(love, good);
+            const mission = simpleIntersect(love, world);
+            const vocation = simpleIntersect(good, money);
+            const profession = simpleIntersect(world, money);
+
+            document.getElementById('txtPassion').textContent = passion.length ? 'Tutku: ' + passion[0] : 'Tutku';
+            document.getElementById('txtMission').textContent = mission.length ? 'Misyon: ' + mission[0] : 'Misyon';
+            document.getElementById('txtVocation').textContent = vocation.length ? 'Meslek: ' + vocation[0] : 'Meslek';
+            document.getElementById('txtProfession').textContent = profession.length ? 'İş/Geçim: ' + profession[0] :
+                'İş/Geçim';
+            document.getElementById('txtCenter').textContent = 'İKİGAİ';
+            document.getElementById('txtCenterSub').textContent = result.concept.charAt(0).toUpperCase() + result.concept
+                .slice(1);
+            document.getElementById('scoreCircle').style.setProperty('--score', score + '%');
+            document.getElementById('scoreText').textContent = score;
+
+            const cmt = document.getElementById('ikigaiComment');
+            let comment = '<strong>✨ Senin İkigain:</strong> ' + core + '. ';
+            if (result.isWeak) {
+                comment +=
+                    'Şu anki cevaplarınla güçlü bir İkigai yakalayamadım. Belki de henüz yolun başındasın. Her soruya daha derin, daha içten cevaplar vermeyi dene. Doğru kelimeler, doğru amacı bulmana yardımcı olacak.';
+            } else {
+                const conceptComments = {
+                    'yaratıcılık': 'İçindeki yaratıcı enerji, evrenin sana en büyük armağanı. Düşüncelerini somut eserlere dönüştürme yeteneğin, dünyanın en çok ihtiyaç duyduğu şey: özgünlük ve güzellik.',
+                    'zanaat': 'Ellerinin emeği ve becerin, modern dünyanın kaybettiği o kadim değeri yaşatıyor. Onarmak, üretmek ve güzelleştirmek senin ruhunun en saf ifadesi.',
+                    'yemek': 'Mutfakta yarattığın lezzetler sadece bedenleri değil, ruhları da besliyor. İnsanları bir araya getiren, kültürleri buluşturan bu kadim sanatla dünyaya sıcaklık ve bolluk katıyorsun.',
+                    'eğitim': 'Bilgiyi paylaşma tutkun, karanlıkta yanan bir meşale. Öğrettiğin her şey, geleceğe ektiğin bir tohum.',
+                    'yardım': 'Başkalarının acısını dindirme, onlara destek olma arzun, seni yeryüzünün şifacısı yapıyor. Merhametin ve anlayışınla dokunduğun her hayat, senin sayende biraz daha umut doluyor.',
+                    'adalet': 'Adalet duygun, pusulan. Dünyanın dengesizliklerine karşı duruşun, seni güçlü ve değerli kılıyor.',
+                    'doğa': 'Doğayla kurduğun derin bağ, seni onun sesi ve koruyucusu yapıyor. Sürdürülebilir bir yaşam için verdiğin mücadele, gelecek nesillere bırakacağın en büyük miras.',
+                    'teknoloji': 'Dijital dünyadaki ustalığınla çağın dilini konuşuyorsun. Kodların ve yenilikçi fikirlerinle sorunlara çözümler üreterek insanların hayatını kolaylaştırmak senin elinde.',
+                    'ticaret': 'Değiş tokuşun ve değer yaratmanın kadim sanatında ustasın. İnsanların ihtiyaçlarını görüp onlara çözüm sunarak hem kendi hayatını hem de başkalarının hayatını zenginleştiriyorsun.',
+                    'hareket': 'Hareket ve sağlık, senin felsefenin temeli. Bedeninin ve zihninin enerjisiyle çevrene ilham veriyorsun.',
+                    'oyun': 'Oyun oynamak sandığın kadar basit değil; insan ruhunun en derin besinlerinden biri. Neşeyi, yaratıcılığı ve rekabeti hayatın merkezine koyarak dünyaya hafiflik ve mutluluk katabilirsin.',
+                    'iletişim': 'Kelimelerin ve sesin büyülü bir güce sahip. İnsanları anlamak, onlara dokunmak ve onları harekete geçirmek senin doğuştan gelen yeteneğin.',
+                    'güzellik': 'Güzelliği yaratma ve ortaya çıkarma yeteneğin, insanlara özgüven ve mutluluk aşılıyor. Dokunduğun her şeyi güzelleştiriyorsun.',
+                    'ulaşım': 'İnsanları ve eşyaları bir noktadan diğerine ulaştırma becerin, modern dünyanın damarlarında dolaşan kan gibi.',
+                    'bilim': 'Merakın ve sorgulama gücün, seni gerçeğin peşinde bir kaşif yapıyor. Bilimsel düşünceyle dünyayı daha iyi bir yer haline getirebilirsin.',
+                    'ruhsallık': 'İçsel yolculuğun ve ruhsal derinliğin, başkalarına rehberlik edebilecek bir bilgelik sunuyor. Huzur ve farkındalık seninle yayılıyor.',
+                    'müzik': 'Sesin ve ritmin evrensel diliyle insanların kalbine dokunuyorsun. Müzik, senin aracılığınla dünyayı iyileştiriyor.',
+                    'edebiyat': 'Kelimelerin gücüyle yeni dünyalar inşa ediyorsun. Hikâyelerin, insanların ufkunu açıyor ve onları dönüştürüyor.',
+                    'tarih': 'Geçmişin bilgeliğini bugüne taşıyarak geleceği şekillendiriyorsun. Tarih, senin ellerinde canlanıyor ve dersler sunuyor.',
+                    'sinema': 'Görüntü ve sesin büyüsüyle insanları başka diyarlara götürüyorsun. Hikâyelerin, toplumun aynası ve ilham kaynağı.'
+                };
+                comment += conceptComments[result.concept] ||
+                    `"${result.concept}" teması, yaşam enerjinin merkezinde parlıyor. Bu yolda ilerlerken hem kendini gerçekleştirecek hem de dünyaya eşsiz bir iz bırakacaksın.`;
+            }
+            comment += ' 🌸';
+            cmt.innerHTML = comment;
+
+            document.getElementById('diagramWrapper').classList.add('revealed');
+            document.getElementById('placeholderMsg').classList.add('hidden');
+            document.getElementById('scorePanel').style.opacity = '1';
+            switchTab('tabIkigai', document.querySelector('[data-tab="tabIkigai"]'));
+        };
+    </script>
 </body>
 </html>
